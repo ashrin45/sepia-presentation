@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEPIA — Sepsis Early Prediction by Intelligence Artificielle</title>
+    <meta name="description" content="SEPIA — étude pilote de prédiction précoce du sepsis à partir de la cytométrie en flux Sysmex XN-10. Présentation interactive pour cliniciens, data managers et comités éthiques.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    ink: {
+                        primary:   '#1A1814',
+                        secondary: '#B83B2A',  /* sépia ocre brûlé (au lieu du rouge brique) */
+                        tertiary:  '#9C9489',
+                        bg:        '#E8E5DD',
+                        surface:   '#FFFFFF',
+                        muted:     '#6B6358',
+                        border:    '#DDD7C9',
+                        line:      '#C9C2B6',
+                        soft:      '#EFEAE0',
+                        wash:      '#F4F1E8',
+                    },
+                },
+                fontFamily: {
+                    display: ['"Newsreader"', 'serif'],
+                    body:    ['"Inter"', 'sans-serif'],
+                    mono:    ['"JetBrains Mono"', 'monospace'],
+                },
+            },
+        },
+    }
+    </script>
+
+    <style>
+    :root {
+        --ink-primary:   #1A1814;
+        --ink-secondary: #B83B2A;  /* sépia ocre brûlé */
+        --ink-tertiary:  #9C9489;
+        --ink-muted:     #6B6358;
+        --ink-line:      #C9C2B6;
+        --ink-border:    #DDD7C9;
+        --ink-soft:      #EFEAE0;
+        --ink-wash:      #F4F1E8;
+        --ink-surface:   #FFFFFF;
+        --ink-bg:        #E8E5DD;
+    }
+
+    html { background: var(--ink-bg); }
+    body {
+        background:
+            radial-gradient(1200px 700px at 80% -10%, rgba(255, 250, 240, 0.55), transparent 60%),
+            radial-gradient(900px 500px at -10% 30%, rgba(244, 241, 232, 0.75), transparent 55%),
+            linear-gradient(180deg, var(--ink-bg) 0%, var(--ink-soft) 70%, var(--ink-wash) 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: var(--ink-primary);
+        font-feature-settings: "ss01", "cv11";
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+    }
+
+    .grain {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0.10;
+        mix-blend-mode: multiply;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.85'/%3E%3C/svg%3E");
+        background-size: 280px 280px;
+    }
+    .grain::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        opacity: 1;
+        mix-blend-mode: normal;
+        background-image:
+            linear-gradient(to right, rgba(17, 24, 39, 0.20) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(17, 24, 39, 0.20) 1px, transparent 1px);
+        background-size: 32px 32px;
+        mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, #000 30%, transparent 100%);
+        -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, #000 30%, transparent 100%);
+    }
+
+    .display { font-family: 'Newsreader', serif; font-weight: 400; letter-spacing: -0.05em; line-height: 0.95; color: var(--ink-primary); }
+    .display em { font-style: italic; font-weight: 300; color: var(--ink-secondary); }
+
+    .eyebrow {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px; font-weight: 500;
+        text-transform: uppercase; letter-spacing: 0.28em;
+        color: var(--ink-muted);
+    }
+    .hairline { height: 1px; background: linear-gradient(90deg, transparent, var(--ink-line) 20%, var(--ink-line) 80%, transparent); }
+
+    .shell {
+        position: relative; padding: 1px; border-radius: 28px;
+        background: linear-gradient(145deg, rgba(156, 148, 137, 0.85) 0%, rgba(201, 194, 182, 0.45) 45%, rgba(221, 215, 201, 0.92) 100%);
+        box-shadow: 0 1px 2px 0 rgba(17, 24, 39, 0.04), 0 8px 22px -6px rgba(17, 24, 39, 0.08);
+        transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 500ms cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
+    }
+    .shell::after {
+        content: ''; position: absolute; inset: -2px; border-radius: 30px;
+        opacity: 0; transition: opacity 500ms ease;
+        background: linear-gradient(145deg, rgba(184, 59, 42, 0.22) 0%, transparent 50%, rgba(17, 24, 39, 0.12) 100%);
+        z-index: -1; filter: blur(8px);
+    }
+    .shell:hover { transform: translateY(-3px); box-shadow: 0 1px 2px 0 rgba(17, 24, 39, 0.04), 0 30px 55px -18px rgba(17, 24, 39, 0.20); }
+    .shell:hover::after { opacity: 1; }
+
+    .shell-inner {
+        position: relative; background: rgba(244, 241, 232, 0.92);
+        backdrop-filter: blur(14px) saturate(120%); -webkit-backdrop-filter: blur(14px) saturate(120%);
+        border: 1px solid rgba(244, 241, 232, 0.95); border-radius: 27px;
+        padding: 32px; overflow: hidden;
+    }
+    .shell-hero { border-radius: 40px; padding: 1px; }
+    .shell-hero .shell-inner { border-radius: 39px; padding: 40px; }
+
+    .mod-numeral {
+        font-family: 'Newsreader', serif; font-weight: 300;
+        font-size: 220px; line-height: 0.75; letter-spacing: -0.06em;
+        color: var(--ink-primary); opacity: 0.045;
+        position: absolute; right: -8px; bottom: -38px;
+        pointer-events: none; user-select: none;
+        transition: opacity 500ms ease, color 500ms ease;
+    }
+    .shell:hover .mod-numeral { opacity: 0.09; }
+
+    .mod-tag {
+        display: inline-flex; align-items: center; gap: 8px;
+        font-family: 'JetBrains Mono', monospace; font-size: 11px;
+        letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-muted);
+    }
+    .mod-tag .dot { width: 6px; height: 6px; border-radius: 9999px; background: var(--ink-primary); transition: background 300ms ease, box-shadow 300ms ease; }
+    .shell:hover .mod-tag .dot { background: var(--ink-secondary); box-shadow: 0 0 0 4px rgba(184, 59, 42, 0.16); }
+
+    .mod-title {
+        font-family: 'Newsreader', serif; font-weight: 500;
+        font-size: 28px; line-height: 1.05; letter-spacing: -0.025em;
+        color: var(--ink-primary); transition: color 300ms ease;
+    }
+    .shell-hero .mod-title { font-size: 44px; font-weight: 400; }
+    .shell:hover .mod-title { color: #000; }
+    .mod-title em { color: var(--ink-secondary); font-style: italic; font-weight: 400; }
+
+    .mod-body {
+        font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 300;
+        line-height: 1.625; color: var(--ink-muted);
+    }
+
+    .chip {
+        display: inline-flex; align-items: center; gap: 6px;
+        font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500;
+        letter-spacing: 0.04em; padding: 6px 12px; border-radius: 9999px;
+        background: var(--ink-soft); color: var(--ink-primary);
+        border: 1px solid rgba(221, 215, 201, 0.85); transition: all 300ms ease;
+    }
+    .shell:hover .chip { background: #FFF; border-color: var(--ink-line); }
+
+    .audience-tag {
+        display: inline-flex; align-items: center; gap: 8px;
+        font-family: 'JetBrains Mono', monospace; font-size: 10px;
+        letter-spacing: 0.2em; text-transform: uppercase;
+        padding: 4px 10px; border-radius: 9999px;
+        border: 1px solid var(--ink-border);
+        background: rgba(255, 255, 255, 0.6); color: var(--ink-muted);
+    }
+    .audience-tag.clinique { color: #6B5236; border-color: rgba(184, 59, 42, 0.3); background: rgba(184, 59, 42, 0.06); }
+    .audience-tag.data     { color: #2B4A5F; border-color: rgba(43, 74, 95, 0.3);  background: rgba(43, 74, 95, 0.05); }
+    .audience-tag.reglo    { color: #4B3F2A; border-color: rgba(75, 63, 42, 0.3);  background: rgba(75, 63, 42, 0.05); }
+
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 700ms cubic-bezier(0.4, 0, 0.2, 1), transform 700ms cubic-bezier(0.4, 0, 0.2, 1); transition-delay: calc(var(--i, 0) * 80ms); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .nav-glass { background: rgba(244, 241, 232, 0.78); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%); border-bottom: 1px solid rgba(201, 194, 182, 0.65); }
+
+    .btn-primary {
+        display: inline-flex; align-items: center; gap: 10px;
+        padding: 14px 22px; border-radius: 9999px;
+        background: var(--ink-primary); color: #FFF;
+        font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; letter-spacing: 0.01em;
+        border: 1px solid var(--ink-primary);
+        transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-primary:hover { background: #000; transform: translateY(-1px); box-shadow: 0 8px 20px -8px rgba(17, 24, 39, 0.4); }
+    .btn-secondary {
+        display: inline-flex; align-items: center; gap: 10px;
+        padding: 13px 20px; border-radius: 9999px;
+        background: var(--ink-soft); color: var(--ink-primary);
+        font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+        border: 1px solid rgba(221, 215, 201, 0.85);
+        transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-secondary:hover { background: #FFF; border-color: var(--ink-line); }
+
+    .stat-line { display: inline-flex; align-items: baseline; gap: 8px; }
+    .stat-num { font-family: 'Newsreader', serif; font-weight: 400; font-size: 36px; letter-spacing: -0.04em; line-height: 1; color: var(--ink-primary); }
+    .stat-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.22em; color: var(--ink-muted); }
+
+    .arrow { display: inline-block; transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1); }
+    .shell:hover .arrow, a:hover .arrow { transform: translateX(4px); }
+
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--ink-soft); }
+    ::-webkit-scrollbar-thumb { background: var(--ink-line); border-radius: 9999px; border: 2px solid var(--ink-soft); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--ink-tertiary); }
+    ::selection { background: rgba(184, 59, 42, 0.22); color: var(--ink-primary); }
+
+    @media (max-width: 767px) {
+        .display-hero { font-size: 64px !important; }
+        .mod-numeral { font-size: 160px; bottom: -28px; }
+        .shell-hero .shell-inner { padding: 28px; }
+        .shell-inner { padding: 24px; }
+    }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:"JetBrains Mono", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.relative{position:relative}.sticky{position:sticky}.top-0{top:0px}.z-10{z-index:10}.z-30{z-index:30}.col-span-12{grid-column:span 12 / span 12}.col-span-6{grid-column:span 6 / span 6}.mx-auto{margin-left:auto;margin-right:auto}.mb-12{margin-bottom:3rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mt-10{margin-top:2.5rem}.mt-20{margin-top:5rem}.mt-3{margin-top:0.75rem}.mt-4{margin-top:1rem}.mt-8{margin-top:2rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-16{height:4rem}.h-auto{height:auto}.h-px{height:1px}.w-8{width:2rem}.w-full{width:100%}.max-w-2xl{max-width:42rem}.max-w-7xl{max-width:80rem}.max-w-sm{max-width:24rem}.max-w-xl{max-width:36rem}.grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-6{gap:1.5rem}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.border-t{border-top-width:1px}.border-ink-border{--tw-border-opacity:1;border-color:rgb(221 215 201 / var(--tw-border-opacity, 1))}.bg-ink-line{--tw-bg-opacity:1;background-color:rgb(201 194 182 / var(--tw-bg-opacity, 1))}.bg-white\/40{background-color:rgb(255 255 255 / 0.4)}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.pb-20{padding-bottom:5rem}.pb-32{padding-bottom:8rem}.pt-24{padding-top:6rem}.font-body{font-family:"Inter", sans-serif}.font-display{font-family:"Newsreader", serif}.font-mono{font-family:"JetBrains Mono", monospace}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-5xl{font-size:3rem;line-height:1}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[42px\]{font-size:42px}.text-\[90px\]{font-size:90px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-light{font-weight:300}.font-medium{font-weight:500}.uppercase{text-transform:uppercase}.not-italic{font-style:normal}.leading-\[0\.88\]{line-height:0.88}.leading-\[1\.04\]{line-height:1.04}.leading-relaxed{line-height:1.625}.tracking-\[0\.22em\]{letter-spacing:0.22em}.tracking-tight{letter-spacing:-0.025em}.tracking-wide{letter-spacing:0.025em}.text-ink-muted{--tw-text-opacity:1;color:rgb(107 99 88 / var(--tw-text-opacity, 1))}.text-ink-primary{--tw-text-opacity:1;color:rgb(26 24 20 / var(--tw-text-opacity, 1))}.text-ink-tertiary{--tw-text-opacity:1;color:rgb(156 148 137 / var(--tw-text-opacity, 1))}.backdrop-blur{--tw-backdrop-blur:blur(8px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.hover\:text-ink-primary:hover{--tw-text-opacity:1;color:rgb(26 24 20 / var(--tw-text-opacity, 1))}.hover\:underline:hover{-webkit-text-decoration-line:underline;text-decoration-line:underline}@media (min-width: 768px){.md\:col-span-3{grid-column:span 3 / span 3}.md\:col-span-6{grid-column:span 6 / span 6}.md\:mt-28{margin-top:7rem}.md\:inline{display:inline}.md\:gap-4{gap:1rem}.md\:px-10{padding-left:2.5rem;padding-right:2.5rem}.md\:pb-28{padding-bottom:7rem}.md\:pt-32{padding-top:8rem}.md\:text-6xl{font-size:3.75rem;line-height:1}.md\:text-\[150px\]{font-size:150px}.md\:text-\[64px\]{font-size:64px}}@media (min-width: 1024px){.lg\:col-span-4{grid-column:span 4 / span 4}.lg\:col-span-8{grid-column:span 8 / span 8}.lg\:border-l{border-left-width:1px}.lg\:pl-10{padding-left:2.5rem}}</style></head>
+
+<body class="font-body">
+
+    <div class="grain"></div>
+
+    <!-- NAV -->
+    <nav class="nav-glass sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <span class="font-display text-xl tracking-tight">SEP<em class="not-italic font-light text-ink-muted">·</em>IA</span>
+            </a>
+            <div class="flex items-center gap-2 md:gap-4">
+                <a href="#parcours" class="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-muted hover:text-ink-primary">Modules</a>
+                <span class="font-mono text-[10px] text-ink-tertiary tracking-wide hidden md:inline">Étude hébergée sur l'infrastructure <em>Nano Warehouse</em></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pt-24 md:pt-32 pb-20 md:pb-28">
+        <div class="grid grid-cols-12 gap-6 items-end">
+
+            <div class="col-span-12 lg:col-span-8">
+                <div class="eyebrow mb-6 flex items-center gap-3">
+                    <span class="w-8 h-px bg-ink-line"></span>
+                    <span>Sepsis Early Prediction by Intelligence Artificielle · Étude pilote</span>
+                </div>
+
+                <!-- SEPIA — Inter sans-serif gras, IA en ocre italique (typo 3 réduite) -->
+                <h1 class="text-[90px] md:text-[150px] leading-[0.88] mb-6" style="font-family: 'Inter', sans-serif; font-weight: 600; letter-spacing: -0.05em; color: var(--ink-primary);">
+                    SEP<span style="color: var(--ink-secondary); font-style: italic; font-weight: 500;">IA</span>
+                </h1>
+
+                <!-- Titre éditorial sous le logo -->
+                <h2 class="display text-[42px] md:text-[64px] leading-[1.04] mb-2">Prédire le sepsis <em>précocement</em>,</h2>
+                <h2 class="display text-[42px] md:text-[64px] leading-[1.04]">à partir d'<em>une goutte de sang.</em></h2>
+
+                <p class="font-body text-lg text-ink-muted mt-8 max-w-xl leading-relaxed">
+                    Anticiper la positivité d'une hémoculture de <span class="text-ink-primary font-medium">12 à 24 heures</span> à partir d'une simple numération formule sanguine sur automate Sysmex XN-10. Un protocole de recherche clinique, structuré pour trois audiences.
+                </p>
+
+                <div class="flex flex-wrap items-center gap-3 mt-10">
+                    <a href="#parcours" class="btn-primary">
+                        <span>Parcourir les modules</span>
+                        <span class="arrow">→</span>
+                    </a>
+                    <a href="modules/01-projet-en-5min/index.html" class="btn-secondary">
+                        <span>Le projet en 5 minutes</span>
+                    </a>
+                </div>
+            </div>
+
+            <aside class="col-span-12 lg:col-span-4 lg:pl-10 lg:border-l border-ink-border">
+                <!-- Scattergram WDF en filigrane comme signature visuelle -->
+                <svg viewBox="0 0 240 220" class="w-full h-auto block" style="opacity:0.92">
+                    <defs>
+                        <radialGradient id="lymph-A" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="#E6B3EE"></stop><stop offset="60%" stop-color="#8B1FA0"></stop><stop offset="100%" stop-color="#3F0A4E"></stop></radialGradient>
+                        <radialGradient id="mono-A" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="#B5F0BC"></stop><stop offset="60%" stop-color="#2ECC40"></stop><stop offset="100%" stop-color="#125419"></stop></radialGradient>
+                        <radialGradient id="neut-A" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="#B2EAF1"></stop><stop offset="60%" stop-color="#00BCD4"></stop><stop offset="100%" stop-color="#003E47"></stop></radialGradient>
+                        <radialGradient id="eo-A" cx="35%" cy="35%" r="65%"><stop offset="0%" stop-color="#FFB8B5"></stop><stop offset="60%" stop-color="#E53935"></stop><stop offset="100%" stop-color="#5C0F0D"></stop></radialGradient>
+                    </defs>
+                    <line x1="20" y1="200" x2="230" y2="200" stroke="var(--ink-line)" stroke-width="1"></line>
+                    <line x1="20" y1="20" x2="20" y2="200" stroke="var(--ink-line)" stroke-width="1"></line>
+                    <text x="125" y="216" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="var(--ink-muted)" letter-spacing="2">SSC →</text>
+                    <text x="14" y="14" font-family="JetBrains Mono" font-size="8" fill="var(--ink-muted)" letter-spacing="2">↑ SFL</text>
+                    <g opacity="0.85">
+                        <circle cx="65" cy="135" r="3" fill="url(#lymph-A)"></circle><circle cx="70" cy="128" r="2.5" fill="url(#lymph-A)"></circle><circle cx="62" cy="142" r="2.6" fill="url(#lymph-A)"></circle><circle cx="76" cy="133" r="2.3" fill="url(#lymph-A)"></circle><circle cx="58" cy="128" r="2.7" fill="url(#lymph-A)"></circle><circle cx="72" cy="148" r="2.4" fill="url(#lymph-A)"></circle><circle cx="68" cy="155" r="2.8" fill="url(#lymph-A)"></circle><circle cx="80" cy="138" r="2.5" fill="url(#lymph-A)"></circle><circle cx="55" cy="138" r="2.4" fill="url(#lymph-A)"></circle>
+                        <circle cx="105" cy="100" r="2.8" fill="url(#mono-A)"></circle><circle cx="110" cy="92" r="2.5" fill="url(#mono-A)"></circle><circle cx="102" cy="108" r="2.4" fill="url(#mono-A)"></circle><circle cx="115" cy="98" r="2.6" fill="url(#mono-A)"></circle><circle cx="98" cy="95" r="2.3" fill="url(#mono-A)"></circle>
+                        <circle cx="135" cy="160" r="3" fill="url(#neut-A)"></circle><circle cx="145" cy="158" r="2.6" fill="url(#neut-A)"></circle><circle cx="128" cy="162" r="2.4" fill="url(#neut-A)"></circle><circle cx="150" cy="165" r="2.7" fill="url(#neut-A)"></circle><circle cx="138" cy="168" r="2.3" fill="url(#neut-A)"></circle><circle cx="158" cy="162" r="2.5" fill="url(#neut-A)"></circle><circle cx="125" cy="168" r="2.6" fill="url(#neut-A)"></circle><circle cx="148" cy="170" r="2.4" fill="url(#neut-A)"></circle><circle cx="132" cy="155" r="2.5" fill="url(#neut-A)"></circle>
+                        <circle cx="190" cy="170" r="2.4" fill="url(#eo-A)"></circle><circle cx="195" cy="165" r="2.2" fill="url(#eo-A)"></circle><circle cx="188" cy="175" r="2.3" fill="url(#eo-A)"></circle>
+                    </g>
+                </svg>
+                <p class="eyebrow mt-4">Scattergram WDF · Sysmex XN-10</p>
+            </aside>
+        </div>
+
+        <div class="hairline mt-20 md:mt-28"></div>
+    </header>
+
+    <!-- MODULES -->
+    <main id="parcours" class="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pb-32">
+
+        <!-- ============================================================ -->
+        <!-- 3 MODULES PLEINE LARGEUR (un par audience)                   -->
+        <!-- Chaque module a un numéro géant en filigrane à gauche        -->
+        <!-- ============================================================ -->
+
+        <a href="modules/01-vue-ensemble/index.html" class="shell shell-hero reveal block mb-12" style="--i:0">
+            <div class="shell-inner" style="padding: 56px 64px; min-height: 280px; display: grid; grid-template-columns: 220px 1fr auto; gap: 32px; align-items: center;">
+                <div style="font-family:'Newsreader',serif; font-weight:300; font-size:200px; line-height:0.75; letter-spacing:-0.06em; color:var(--ink-secondary); opacity:0.85;">01</div>
+                <div>
+                    <span class="audience-tag clinique mb-4" style="display:inline-flex;">Pour qui découvre le projet</span>
+                    <h2 class="display text-5xl md:text-6xl mb-4 mt-3">Vue <em>d'ensemble</em></h2>
+                    <p class="mod-body text-base max-w-2xl">
+                        Contexte clinique, problème adressé, hypothèse scientifique. Pourquoi anticiper la positivité d'une hémoculture de 12-24 h changerait la prise en charge du sepsis. Pour cliniciens, chefs de service, partenaires.
+                    </p>
+                </div>
+                <div class="flex flex-col items-end gap-3">
+                    <span class="chip">Module 01</span>
+                    <span class="font-body text-sm text-ink-primary flex items-center gap-2">Découvrir <span class="arrow">→</span></span>
+                </div>
+            </div>
+        </a>
+
+        <a href="modules/02-pipeline-technique/index.html" class="shell shell-hero reveal block mb-12" style="--i:1">
+            <div class="shell-inner" style="padding: 56px 64px; min-height: 280px; display: grid; grid-template-columns: 220px 1fr auto; gap: 32px; align-items: center;">
+                <div style="font-family:'Newsreader',serif; font-weight:300; font-size:200px; line-height:0.75; letter-spacing:-0.06em; color:var(--ink-secondary); opacity:0.85;">02</div>
+                <div>
+                    <span class="audience-tag data mb-4" style="display:inline-flex;">Pour data managers · biostat · DSI</span>
+                    <h2 class="display text-5xl md:text-6xl mb-4 mt-3">Pipeline <em>technique</em></h2>
+                    <p class="mod-body text-base max-w-2xl">
+                        De la machine au modèle : sept couches medallion, Rosetta Stone, scattergrams animés. SEPIA s'appuie sur l'infrastructure <em>Nano Warehouse</em>, mutualisée pour plusieurs études.
+                    </p>
+                </div>
+                <div class="flex flex-col items-end gap-3">
+                    <span class="chip">Module 02</span>
+                    <span class="font-body text-sm text-ink-primary flex items-center gap-2">Explorer <span class="arrow">→</span></span>
+                </div>
+            </div>
+        </a>
+
+        <a href="modules/03-cadre-reglementaire/index.html" class="shell shell-hero reveal block" style="--i:2">
+            <div class="shell-inner" style="padding: 56px 64px; min-height: 280px; display: grid; grid-template-columns: 220px 1fr auto; gap: 32px; align-items: center;">
+                <div style="font-family:'Newsreader',serif; font-weight:300; font-size:200px; line-height:0.75; letter-spacing:-0.06em; color:var(--ink-secondary); opacity:0.85;">03</div>
+                <div>
+                    <span class="audience-tag reglo mb-4" style="display:inline-flex;">Pour URC · CNIL · DPO · comité éthique</span>
+                    <h2 class="display text-5xl md:text-6xl mb-4 mt-3">Cadre <em>réglementaire</em></h2>
+                    <p class="mod-body text-base max-w-2xl">
+                        Régime MR-004, pseudonymisation au sens RGPD article 4(5), hash SHA-256, sécurité d'accès. Tout ce qu'un comité d'éthique attend pour valider le protocole.
+                    </p>
+                </div>
+                <div class="flex flex-col items-end gap-3">
+                    <span class="chip">Module 03</span>
+                    <span class="font-body text-sm text-ink-primary flex items-center gap-2">Consulter <span class="arrow">→</span></span>
+                </div>
+            </div>
+        </a>
+
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="relative z-10 border-t border-ink-border bg-white/40 backdrop-blur">
+        <div class="max-w-7xl mx-auto px-6 md:px-10 py-12 grid grid-cols-12 gap-6">
+            <div class="col-span-12 md:col-span-6">
+                <p class="display text-3xl mb-3"><em>SEPIA</em></p>
+                <p class="font-body text-sm text-ink-muted max-w-sm">
+                    Étude pilote de prédiction précoce du sepsis. CHI André Grégoire (Montreuil), groupement GPNE. Hébergée sur l'infrastructure data <em>Nano Warehouse</em>.
+                </p>
+            </div>
+            <div class="col-span-6 md:col-span-3">
+                <p class="eyebrow mb-3">Audiences</p>
+                <ul class="space-y-2 font-body text-sm text-ink-muted">
+                    <li>Cliniciens / découvrir</li>
+                    <li>Data managers / biostat</li>
+                    <li>URC / CNIL / DPO</li>
+                </ul>
+            </div>
+            <div class="col-span-6 md:col-span-3">
+                <p class="eyebrow mb-3">Liens</p>
+                <ul class="space-y-2 font-body text-sm">
+                    <li><a href="#parcours" class="text-ink-primary hover:underline">Tous les modules</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-ink-border">
+            <div class="max-w-7xl mx-auto px-6 md:px-10 py-5 flex flex-wrap items-center justify-between gap-3">
+                <span class="font-mono text-[11px] text-ink-tertiary tracking-wide">SEPIA v0.1</span>
+                <span class="font-mono text-[11px] text-ink-tertiary">© 2026 · Dr Ahmed Ashrin</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    (() => {
+        const trigger = () => {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach((c, i) => { if (!c.style.getPropertyValue('--i')) c.style.setProperty('--i', i); });
+            requestAnimationFrame(() => reveals.forEach(c => c.classList.add('visible')));
+        };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', trigger);
+        else trigger();
+    })();
+    </script>
+
+
+</body></html>

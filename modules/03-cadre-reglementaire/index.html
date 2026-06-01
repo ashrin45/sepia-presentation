@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEPIA — Module 03 · Cadre réglementaire</title>
+    <meta name="description" content="SEPIA — Module 03 : régime MR-004, pseudonymisation au sens RGPD article 4(5), sécurité d'accès, gouvernance. Pour URC, CNIL, DPO et comités éthiques.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: { extend: {
+            colors: { ink: { primary: '#1A1814', secondary: '#B83B2A', tertiary: '#9C9489', bg: '#E8E5DD', surface: '#FFFFFF', muted: '#6B6358', border: '#DDD7C9', line: '#C9C2B6', soft: '#EFEAE0', wash: '#F4F1E8' } },
+            fontFamily: { display: ['"Newsreader"', 'serif'], body: ['"Inter"', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+        } }
+    }
+    </script>
+
+    <style>
+    :root {
+        --ink-primary: #1A1814; --ink-secondary: #B83B2A; --ink-tertiary: #9C9489; --ink-muted: #6B6358;
+        --ink-line: #C9C2B6; --ink-border: #DDD7C9; --ink-soft: #EFEAE0; --ink-wash: #F4F1E8;
+        --ink-surface: #FFFFFF; --ink-bg: #E8E5DD; --ink-success: #2E7D58; --ink-alert: #A33B3B;
+    }
+    html { background: var(--ink-bg); }
+    body { background:
+            radial-gradient(1200px 700px at 80% -10%, rgba(255, 250, 240, 0.55), transparent 60%),
+            radial-gradient(900px 500px at -10% 30%, rgba(244, 241, 232, 0.75), transparent 55%),
+            linear-gradient(180deg, var(--ink-bg) 0%, var(--ink-soft) 70%, var(--ink-wash) 100%);
+        background-attachment: fixed; min-height: 100vh; color: var(--ink-primary);
+        -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    }
+    .grain { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.08; mix-blend-mode: multiply;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.85'/%3E%3C/svg%3E");
+        background-size: 280px 280px;
+    }
+    .display { font-family: 'Newsreader', serif; font-weight: 400; letter-spacing: -0.04em; line-height: 1.02; color: var(--ink-primary); }
+    .display em { font-style: italic; font-weight: 300; color: var(--ink-secondary); }
+    .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.28em; color: var(--ink-muted); }
+    .eyebrow .num { color: var(--ink-secondary); font-weight: 700; margin-right: 16px; }
+    .hairline { height: 1px; background: linear-gradient(90deg, transparent, var(--ink-line) 20%, var(--ink-line) 80%, transparent); }
+    .nav-glass { background: rgba(244, 241, 232, 0.78); backdrop-filter: blur(16px) saturate(140%); border-bottom: 1px solid rgba(201, 194, 182, 0.65); }
+    .panel { position: relative; background: rgba(255, 255, 255, 0.55); border: 1px solid var(--ink-border); border-radius: 22px; padding: 36px 40px; backdrop-filter: blur(10px); }
+    .panel.tinted { background: rgba(184, 59, 42, 0.04); border-color: rgba(184, 59, 42, 0.18); }
+    .panel.dark { background: var(--ink-primary); color: rgba(255,255,255,0.92); border-color: transparent; }
+    .panel.dark .eyebrow { color: rgba(255,255,255,0.55); }
+    .panel.dark .display em { color: #E2A88E; }
+    .bullets { list-style: none; padding: 0; margin: 0; }
+    .bullets li { position: relative; padding: 10px 0 10px 26px; font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.55; color: var(--ink-primary); border-bottom: 1px solid rgba(201, 194, 182, 0.4); }
+    .bullets li:last-child { border-bottom: none; }
+    .bullets li::before { content: ''; position: absolute; left: 0; top: 22px; width: 14px; height: 1px; background: var(--ink-secondary); }
+    .bullets li strong { color: var(--ink-primary); font-weight: 600; }
+    .bullets li em { color: var(--ink-secondary); font-style: italic; font-weight: 500; }
+    .mr004-hero { display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: stretch; }
+    .mr004-card { padding: 48px 44px; background: rgba(184, 59, 42, 0.06); border-left: 6px solid var(--ink-secondary); border-radius: 0 18px 18px 0; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+    .mr004-big { font-family: 'Newsreader', serif; font-weight: 400; font-size: 120px; line-height: 0.9; letter-spacing: -0.04em; color: var(--ink-secondary); }
+    .mr004-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-secondary); font-weight: 600; }
+    .decision { display: flex; flex-direction: column; gap: 0; }
+    .decision-row { display: grid; grid-template-columns: 180px 1fr; gap: 24px; padding: 22px 0; border-bottom: 1px solid var(--ink-border); align-items: start; }
+    .decision-row:last-child { border-bottom: none; }
+    .decision-q { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-muted); padding-top: 4px; }
+    .decision-a { display: flex; gap: 16px; align-items: flex-start; }
+    .decision-flag { padding: 4px 12px; border-radius: 9999px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; flex-shrink: 0; font-weight: 600; }
+    .decision-flag.ok { background: rgba(46, 125, 88, 0.12); color: var(--ink-success); }
+    .decision-flag.no { background: rgba(163, 59, 59, 0.10); color: var(--ink-alert); }
+    .decision-text { font-family: 'Inter', sans-serif; font-size: 16px; color: var(--ink-primary); line-height: 1.55; }
+    .perimeter-grid { display: grid; grid-template-columns: 1fr 80px 1fr; gap: 16px; align-items: stretch; }
+    .perimeter { padding: 32px; border-radius: 18px; display: flex; flex-direction: column; gap: 14px; }
+    .perimeter.inside { background: var(--ink-primary); color: #FFF; }
+    .perimeter.inside .eyebrow { color: rgba(255,255,255,0.55); }
+    .perimeter.outside { background: rgba(255,255,255,0.55); border: 1px dashed var(--ink-line); }
+    .perimeter .title { font-family: 'Newsreader', serif; font-size: 26px; font-weight: 500; line-height: 1.15; }
+    .perimeter ul { list-style: none; padding: 0; margin: 0; font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.6; }
+    .perimeter ul li { padding: 4px 0; }
+    .perimeter-arrow { display: flex; align-items: center; justify-content: center; }
+    .perimeter-bar { height: 2px; background: var(--ink-line); flex: 1; }
+    .perimeter-arrow .lock { width: 36px; height: 36px; border-radius: 50%; background: var(--ink-bg); border: 1px solid var(--ink-border); display: flex; align-items: center; justify-content: center; color: var(--ink-primary); }
+    .pseudo-flow { display: grid; grid-template-columns: 1fr 50px 1fr 50px 1fr; gap: 14px; align-items: center; margin-top: 24px; }
+    .pseudo-card { padding: 22px; background: #FFF; border: 1px solid var(--ink-border); border-radius: 14px; min-height: 140px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+    .pseudo-card.hash { background: var(--ink-primary); color: #FFF; border-color: transparent; font-family: 'JetBrains Mono', monospace; }
+    .pseudo-card.id { background: rgba(184, 59, 42, 0.06); border-color: rgba(184, 59, 42, 0.25); }
+    .pseudo-lab { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.22em; color: var(--ink-muted); }
+    .pseudo-card.hash .pseudo-lab { color: rgba(255,255,255,0.55); }
+    .pseudo-card.id .pseudo-lab { color: var(--ink-secondary); }
+    .pseudo-val { font-family: 'JetBrains Mono', monospace; font-size: 14px; word-break: break-all; }
+    .pseudo-val.big { font-size: 18px; font-weight: 600; }
+    .pseudo-arrow { display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 22px; color: var(--ink-secondary); }
+    .role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .role-card { padding: 24px; background: rgba(255,255,255,0.6); border: 1px solid var(--ink-border); border-radius: 14px; }
+    .role-name { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-secondary); font-weight: 600; }
+    .role-title { font-family: 'Newsreader', serif; font-size: 22px; font-weight: 500; margin-top: 6px; line-height: 1.2; }
+    .role-body { font-family: 'Inter', sans-serif; font-size: 14px; color: var(--ink-muted); margin-top: 10px; line-height: 1.55; }
+    .role-flag { display: inline-block; margin-top: 14px; padding: 4px 10px; border-radius: 9999px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; background: rgba(46, 125, 88, 0.12); color: var(--ink-success); }
+    .role-flag.pending { background: rgba(184, 59, 42, 0.12); color: var(--ink-secondary); }
+    .role-flag.info { background: rgba(75, 63, 42, 0.12); color: #6B5236; }
+    .security-stack { display: flex; flex-direction: column; gap: 0; }
+    .sec-layer { display: grid; grid-template-columns: 60px 220px 1fr; gap: 24px; padding: 22px 28px; background: rgba(255,255,255,0.55); border: 1px solid var(--ink-border); border-bottom: none; align-items: center; }
+    .sec-layer:first-child { border-radius: 16px 16px 0 0; }
+    .sec-layer:last-child { border-radius: 0 0 16px 16px; border-bottom: 1px solid var(--ink-border); }
+    .sec-num { font-family: 'Newsreader', serif; font-size: 36px; font-weight: 300; color: var(--ink-secondary); line-height: 1; }
+    .sec-title { font-family: 'Newsreader', serif; font-size: 20px; font-weight: 500; line-height: 1.2; }
+    .sec-body { font-family: 'Inter', sans-serif; font-size: 14px; color: var(--ink-muted); line-height: 1.55; }
+    section.module-section { padding: 80px 0; position: relative; z-index: 2; }
+    section.module-section + section.module-section { border-top: 1px solid rgba(201, 194, 182, 0.4); }
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 700ms cubic-bezier(0.4, 0, 0.2, 1), transform 700ms cubic-bezier(0.4, 0, 0.2, 1); transition-delay: calc(var(--i, 0) * 80ms); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .crumb { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-muted); }
+    .crumb a { color: var(--ink-muted); transition: color 200ms ease; }
+    .crumb a:hover { color: var(--ink-primary); }
+    .crumb .sep { color: var(--ink-tertiary); margin: 0 10px; }
+    .arrow { display: inline-block; transition: transform 400ms cubic-bezier(0.4, 0, 0.2, 1); }
+    a:hover .arrow { transform: translateX(4px); }
+    @media (max-width: 767px) {
+        .display-hero { font-size: 56px !important; }
+        .mr004-hero { grid-template-columns: 1fr; }
+        .mr004-big { font-size: 80px; }
+        .perimeter-grid { grid-template-columns: 1fr; }
+        .pseudo-flow { grid-template-columns: 1fr; }
+        .pseudo-arrow { transform: rotate(90deg); }
+        .sec-layer { grid-template-columns: 1fr; gap: 8px; }
+        .decision-row { grid-template-columns: 1fr; }
+    }
+    </style>
+</head>
+<body class="font-body">
+    <div class="grain"></div>
+    <nav class="nav-glass sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
+            <div class="crumb"><a href="../../index.html">SEPIA</a><span class="sep">/</span><span class="text-ink-primary">Module 03 · Cadre réglementaire</span></div>
+            <a href="../../index.html" class="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-muted hover:text-ink-primary">← Retour</a>
+        </div>
+    </nav>
+    <header class="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pt-20 md:pt-28 pb-12">
+        <div class="eyebrow mb-8"><span class="num">03</span><span>Pour URC · CNIL · DPO · comité éthique</span></div>
+        <h1 class="display display-hero text-[58px] md:text-[96px]">Cadre <em>réglementaire</em>.</h1>
+        <p class="font-body text-lg md:text-xl text-ink-muted mt-8 max-w-3xl leading-relaxed">
+            Recherche conforme MR-004, données pseudonymisées au sens RGPD article 4(5), aucun transfert hors établissement. Tous les éléments qu'un comité éthique attend pour valider le protocole.
+        </p>
+        <div class="hairline mt-16"></div>
+    </header>
+    <main>
+        <section class="module-section"><div class="max-w-7xl mx-auto px-6 md:px-10"><div class="reveal" style="--i:0">
+            <div class="eyebrow mb-6"><span class="num">§ 1</span><span>Cadre de référence</span></div>
+            <h2 class="display text-4xl md:text-6xl mb-12">Recherche conforme <em>MR-004</em>.</h2>
+            <div class="mr004-hero">
+                <div class="panel">
+                    <p class="font-body text-base text-ink-primary mb-6 leading-relaxed">
+                        <strong>MR-004</strong>&nbsp;: méthodologie de référence CNIL applicable aux traitements de données à caractère personnel à des fins d'étude, d'évaluation ou de recherche <strong>n'impliquant pas la personne humaine</strong> (au sens de la loi Jardé).
+                    </p>
+                    <ul class="bullets text-base">
+                        <li>Données de soin <strong>déjà collectées</strong>, pas d'examen supplémentaire pour le patient.</li>
+                        <li><strong>Pas de consentement individuel</strong> requis — information collective via livret d'accueil.</li>
+                        <li><strong>Pas d'autorisation CNIL spécifique</strong> si l'établissement a déclaré sa conformité MR-004.</li>
+                        <li>Inscription au registre des traitements, dialogue DPO en cours.</li>
+                    </ul>
+                </div>
+                <div class="mr004-card">
+                    <div class="mr004-label">Cadre de référence</div>
+                    <div class="mr004-big">MR-004</div>
+                    <p class="font-body text-sm text-ink-muted leading-relaxed">
+                        Délibération CNIL n° 2018-155 du 3 mai 2018, modifiée. Référentiel pour le traitement à des fins de recherche, d'étude ou d'évaluation dans le domaine de la santé.
+                    </p>
+                </div>
+            </div>
+        </div></div></section>
+
+        <section class="module-section"><div class="max-w-7xl mx-auto px-6 md:px-10"><div class="reveal" style="--i:0">
+            <div class="eyebrow mb-6"><span class="num">§ 2</span><span>Pourquoi MR-004 s'applique</span></div>
+            <h2 class="display text-4xl md:text-6xl mb-10">Quatre critères, <em>quatre réponses</em>.</h2>
+            <div class="panel">
+                <div class="decision">
+                    <div class="decision-row"><div class="decision-q">Critère 1</div><div class="decision-a"><span class="decision-flag no">Non</span><div class="decision-text"><strong>L'étude implique-t-elle la personne humaine&nbsp;?</strong><br><span class="text-ink-muted text-sm">Réutilisation de données collectées en routine, aucun acte supplémentaire — RIPH non.</span></div></div></div>
+                    <div class="decision-row"><div class="decision-q">Critère 2</div><div class="decision-a"><span class="decision-flag ok">Oui</span><div class="decision-text"><strong>Donnée de santé au sens RGPD article 9&nbsp;?</strong><br><span class="text-ink-muted text-sm">NFS + hémocultures sont des données de santé — base légale article 9.2.j (recherche scientifique).</span></div></div></div>
+                    <div class="decision-row"><div class="decision-q">Critère 3</div><div class="decision-a"><span class="decision-flag ok">Oui</span><div class="decision-text"><strong>Finalité de recherche scientifique&nbsp;?</strong><br><span class="text-ink-muted text-sm">Étude de prédiction précoce du sepsis à visée de publication et de valorisation clinique.</span></div></div></div>
+                    <div class="decision-row"><div class="decision-q">Critère 4</div><div class="decision-a"><span class="decision-flag ok">Oui</span><div class="decision-text"><strong>Responsable de traitement déclaré conforme MR-004&nbsp;?</strong><br><span class="text-ink-muted text-sm">CHI André Grégoire — déclaration à vérifier auprès du DPO en début de projet.</span></div></div></div>
+                </div>
+            </div>
+        </div></div></section>
+
+        <section class="module-section"><div class="max-w-7xl mx-auto px-6 md:px-10"><div class="reveal" style="--i:0">
+            <div class="eyebrow mb-6"><span class="num">§ 3</span><span>Protection des données</span></div>
+            <h2 class="display text-4xl md:text-6xl mb-10">Aucune donnée identifiante <em>ne quitte le périmètre hospitalier</em>.</h2>
+            <ul class="bullets text-base md:text-lg max-w-4xl mb-12">
+                <li>Pipeline tournant <strong>exclusivement en local</strong>, sur poste laboratoire identifié.</li>
+                <li>Aucun transfert externe, aucun cloud, aucun service tiers.</li>
+                <li>Code source sans donnée patient — configuration Git stricte (gitignore + pre-commit hooks).</li>
+                <li>Anonymisation <em>renforcée</em> au moment d'une éventuelle publication ou communication.</li>
+            </ul>
+            <div class="perimeter-grid">
+                <div class="perimeter inside">
+                    <div class="eyebrow">Périmètre hospitalier</div>
+                    <div class="title">Données patient</div>
+                    <ul><li>· Stockage local labo (disque réseau CIFS)</li><li>· Pipeline tournant en local</li><li>· Pseudonymisation au sens RGPD 4(5)</li><li>· Pas de cloud, pas de service externe</li><li>· Accès restreint au porteur</li></ul>
+                </div>
+                <div class="perimeter-arrow">
+                    <div class="perimeter-bar"></div>
+                    <div class="lock"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="11" width="16" height="11" rx="2"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg></div>
+                    <div class="perimeter-bar"></div>
+                </div>
+                <div class="perimeter outside">
+                    <div class="eyebrow">Hors périmètre</div>
+                    <div class="title">Données <em>anonymisées</em></div>
+                    <ul><li>· Code source (Git)</li><li>· Statistiques agrégées (publications)</li><li>· Modèles entraînés (sans donnée brute)</li><li>· Communications congrès</li><li>· Posters et thèses</li></ul>
+                </div>
+            </div>
+        </div></div></section>
+
+        <section class="module-section"><div class="max-w-7xl mx-auto px-6 md:px-10"><div class="reveal" style="--i:0">
+            <div class="eyebrow mb-6"><span class="num">§ 4</span><span>Pseudonymisation RGPD 4(5)</span></div>
+            <h2 class="display text-4xl md:text-6xl mb-6">Identifiants patient <em>remplacés par un hash</em>.</h2>
+            <p class="font-body text-lg text-ink-muted max-w-3xl mb-10">
+                Aucun identifiant patient (nom, IPP, NIR, date de naissance) n'est conservé tel quel dans l'entrepôt. À l'entrée du pipeline, chaque IPP est remplacé par un hash SHA-256 salé, irréversible sans la table de correspondance gardée par le porteur.
+            </p>
+            <div class="panel">
+                <div class="pseudo-flow">
+                    <div class="pseudo-card id"><div class="pseudo-lab">Source SIL</div><div class="pseudo-val big">IPP&nbsp;: 1234567</div><div class="pseudo-val text-xs text-ink-muted mt-1">DUPONT Jean — 15/03/1968</div></div>
+                    <div class="pseudo-arrow">→</div>
+                    <div class="pseudo-card hash"><div class="pseudo-lab">SHA-256 + sel</div><div class="pseudo-val">a3f2b9e8…<br>c1d4ef27</div></div>
+                    <div class="pseudo-arrow">→</div>
+                    <div class="pseudo-card"><div class="pseudo-lab">Entrepôt</div><div class="pseudo-val big">patient_id<br>a3f2b9e8c1d4…</div></div>
+                </div>
+                <div class="hairline my-10"></div>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div><div class="eyebrow mb-2">Irréversibilité</div><p class="text-sm text-ink-muted leading-relaxed">SHA-256 + sel propre au projet&nbsp;: impossible de retrouver l'IPP à partir du hash, même avec accès au code.</p></div>
+                    <div><div class="eyebrow mb-2">Table de correspondance</div><p class="text-sm text-ink-muted leading-relaxed">Conservée séparément (poste porteur, chiffré). Indispensable pour ré-identification à des fins de soin uniquement.</p></div>
+                    <div><div class="eyebrow mb-2">Conformité RGPD</div><p class="text-sm text-ink-muted leading-relaxed">Article 4(5)&nbsp;: les données restent personnelles mais bénéficient de garanties techniques renforcées (considérant 28).</p></div>
+                </div>
+            </div>
+        </div></div></section>
+
+        <section class="module-section"><div class="max-w-7xl mx-auto px-6 md:px-10"><div class="reveal" style="--i:0">
+            <div class="eyebrow mb-6"><span class="num">§ 5</span><span>Sécurité technique</span></div>
+            <h2 class="display text-4xl md:text-6xl mb-10">Cinq couches de <em>protection</em>.</h2>
+            <div class="security-stack">
+                <div class="sec-layer"><div class="sec-num">01</div><div class="sec-title">Authentification poste</div><div class="sec-body">Compte AD nominatif du porteur, verrouillage automatique, conformité politique DSI hospitalière standard.</div></div>
+                <div class="sec-layer"><div class="sec-num">02</div><div class="sec-title">Contrôle d'accès fichiers</div><div class="sec-body">ACL Windows sur le répertoire de l'entrepôt&nbsp;: lecture/écriture limitées au porteur. Audit accès activé.</div></div>
+                <div class="sec-layer"><div class="sec-num">03</div><div class="sec-title">Journal d'ingestion append-only</div><div class="sec-body">Chaque écriture Bronze trace l'horodatage, le hash SHA-256 du fichier source, le run_id. Audit trail reproductible.</div></div>
+                <div class="sec-layer"><div class="sec-num">04</div><div class="sec-title">Pseudonymisation au plus tôt</div><div class="sec-body">L'IPP est haché dès l'étape d'ingestion. Aucune table Bronze/Silver/Gold ne contient l'IPP en clair.</div></div>
+                <div class="sec-layer"><div class="sec-num">05</div><div class="sec-title">Code source isolé</div><div class="sec-body">Repo Git séparé des données. .gitignore strict + pre-commit hook scannant les patterns d'IPP / NIR avant chaque commit.</div></div>
+            </div>
+        </div></div></section>
+
+        <section class="module-section"><div class="max-w-7xl mx-auto px-6 md:px-10"><div class="reveal" style="--i:0">
+            <div class="eyebrow mb-6"><span class="num">§ 6</span><span>Engagements explicites</span></div>
+            <h2 class="display text-4xl md:text-6xl mb-10">Ce que nous <em>ne ferons pas</em>.</h2>
+            <div class="panel">
+                <ul class="bullets text-base md:text-lg">
+                    <li>Pas de partage de données patient avec un tiers, public ou privé, en France ou à l'étranger.</li>
+                    <li>Pas d'usage commercial, pas de monétisation, pas de licence à un éditeur.</li>
+                    <li>Pas de réutilisation pour une autre finalité que celle déclarée au registre (sepsis &amp; pathologies modifiant la signature cellulaire).</li>
+                    <li>Pas de profilage individuel à des fins de soin sans validation préalable du processus par les instances compétentes.</li>
+                    <li>Pas de publication contenant de la donnée brute non agrégée.</li>
+                </ul>
+            </div>
+        </div></div></section>
+
+        <section class="module-section"><div class="max-w-7xl mx-auto px-6 md:px-10"><div class="reveal" style="--i:0">
+            <div class="eyebrow mb-6"><span class="num">§ 7</span><span>Gouvernance et soutien</span></div>
+            <h2 class="display text-4xl md:text-6xl mb-10">Le rôle de <em>chaque acteur</em>.</h2>
+            <div class="role-grid">
+                <div class="role-card"><div class="role-name">DPO</div><div class="role-title">Délégué Protection des Données</div><p class="role-body">Inscription au registre des traitements, validation de l'analyse de risque, vérification de la déclaration MR-004 de l'établissement.</p><span class="role-flag pending">À solliciter</span></div>
+                <div class="role-card"><div class="role-name">DSI</div><div class="role-title">Direction des Systèmes d'Information</div><p class="role-body">Information de courtoisie. Le projet n'engage aucune ressource infrastructure (poste existant, stockage existant, pas de cloud).</p><span class="role-flag info">Information</span></div>
+                <div class="role-card"><div class="role-name">DRCI</div><div class="role-title">Direction Recherche Clinique &amp; Innovation</div><p class="role-body">Accompagnement éventuel selon usages locaux. Pas de RIPH, donc pas de circuit CPP, mais relecture méthodologique appréciée.</p><span class="role-flag info">Information</span></div>
+                <div class="role-card"><div class="role-name">URC</div><div class="role-title">Unité de Recherche Clinique</div><p class="role-body">Relecture méthodologique du protocole, accompagnement à la rédaction du dossier MR-004, conseil sur l'évaluation comparative.</p><span class="role-flag pending">À solliciter</span></div>
+                <div class="role-card"><div class="role-name">Comité éthique</div><div class="role-title">Comité local / scientifique</div><p class="role-body">Avis consultatif sur la finalité, la proportionnalité, et l'absence de risque pour les patients. Présentation du protocole et du présent dossier.</p><span class="role-flag pending">À planifier</span></div>
+                <div class="role-card"><div class="role-name">Porteur</div><div class="role-title">Dr Ahmed Ashrin</div><p class="role-body">Responsable scientifique et technique. Seul accès à la table de correspondance IPP ↔ hash. Garant de la conformité MR-004 et du périmètre.</p><span class="role-flag">Engagé</span></div>
+            </div>
+        </div></div></section>
+
+        <section class="module-section"><div class="max-w-7xl mx-auto px-6 md:px-10"><div class="reveal" style="--i:0">
+            <div class="eyebrow mb-6"><span class="num">§ 8</span><span>Synthèse réglementaire</span></div>
+            <div class="panel dark">
+                <h2 class="display text-3xl md:text-5xl mb-8" style="color: #FFF;">Une recherche <em>conforme par construction</em>.</h2>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div>
+                        <p class="font-body text-base leading-relaxed mb-4" style="color: rgba(255,255,255,0.85);">Tous les ingrédients exigés par un comité éthique sont en place&nbsp;: cadre MR-004 documenté, pseudonymisation au sens RGPD article 4(5), périmètre strictement hospitalier, journal d'ingestion auditable, code source isolé de la donnée.</p>
+                        <p class="font-body text-base leading-relaxed" style="color: rgba(255,255,255,0.85);">Le projet ne requiert ni autorisation CNIL spécifique, ni avis CPP. Une inscription au registre des traitements et un avis DPO suffisent à démarrer.</p>
+                    </div>
+                    <div>
+                        <ul class="font-mono text-sm space-y-3" style="color: rgba(255,255,255,0.8);">
+                            <li>✓ MR-004 (réf. CNIL)</li><li>✓ RGPD article 9.2.j</li><li>✓ Pseudonymisation 4(5)</li>
+                            <li>✓ Loi Jardé — RIPH non</li><li>✓ Périmètre hospitalier</li><li>✓ Audit trail reproductible</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div></div></section>
+
+        <section class="module-section"><div class="max-w-7xl mx-auto px-6 md:px-10">
+            <div class="hairline mb-16"></div>
+            <div class="reveal" style="--i:0">
+                <div class="eyebrow mb-6">Suite du parcours</div>
+                <h2 class="display text-3xl md:text-5xl mb-10">Revenir aux autres modules.</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <a href="../01-vue-ensemble/index.html" class="panel block hover:shadow-lg transition-shadow" style="border-color: var(--ink-line);">
+                        <div class="eyebrow mb-3">Module 01</div>
+                        <div class="font-display text-3xl mb-3">Vue <em>d'ensemble</em></div>
+                        <p class="text-sm text-ink-muted mb-4">Contexte clinique, hypothèse scientifique, animation scattergram.</p>
+                        <span class="text-sm font-medium">Découvrir <span class="arrow">→</span></span>
+                    </a>
+                    <a href="../02-pipeline-technique/index.html" class="panel block hover:shadow-lg transition-shadow" style="border-color: var(--ink-line);">
+                        <div class="eyebrow mb-3">Module 02</div>
+                        <div class="font-display text-3xl mb-3">Pipeline <em>technique</em></div>
+                        <p class="text-sm text-ink-muted mb-4">Architecture medallion, Rosetta Stone, infrastructure Nano Warehouse.</p>
+                        <span class="text-sm font-medium">Explorer <span class="arrow">→</span></span>
+                    </a>
+                </div>
+            </div>
+        </div></section>
+    </main>
+    <footer class="relative z-10 border-t border-ink-border bg-white/40 backdrop-blur mt-20">
+        <div class="max-w-7xl mx-auto px-6 md:px-10 py-10 flex flex-wrap items-center justify-between gap-4">
+            <div class="crumb"><a href="../../index.html">SEPIA</a><span class="sep">/</span><span class="text-ink-primary">03 Cadre réglementaire</span></div>
+            <span class="font-mono text-[11px] text-ink-tertiary">© 2026 · Dr Ahmed Ashrin · CHI André Grégoire</span>
+        </div>
+    </footer>
+    <script>
+    (() => {
+        const trigger = () => {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach((c, i) => { if (!c.style.getPropertyValue('--i')) c.style.setProperty('--i', i); });
+            requestAnimationFrame(() => reveals.forEach(c => c.classList.add('visible')));
+        };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', trigger);
+        else trigger();
+    })();
+    </script>
+</body>
+</html>
