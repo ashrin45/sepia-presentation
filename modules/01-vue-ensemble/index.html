@@ -1318,7 +1318,14 @@
           fill: var(--cyto);
           opacity: 0;
         }
-      #embed-sepsis .spark { fill: var(--cyto); opacity: 0; transform-origin: center; transform-box: fill-box; }
+      #embed-sepsis .spark { fill: var(--cyto); opacity: 0; transform-origin: center; transform-box: fill-box; filter: drop-shadow(0 0 1.6px var(--alert-glow)); }
+      #embed-sepsis .ripple {
+          fill: none;
+          stroke: var(--alert);
+          stroke-width: 1.3;
+          opacity: 0;
+          transform-origin: center;
+        }
       #embed-sepsis .organ { opacity: 0.32; transition: opacity 0.6s ease, filter 0.6s ease; }
       #embed-sepsis .organ.impaired {
           opacity: 0.75;
@@ -1664,6 +1671,11 @@
               <image class="vbact" id="vbact-6" href="../../assets/img/anatomy/bacterium.png" x="-30" y="260" width="16" height="16"/>
             </g>
 
+            <!-- Bannière "Médiateurs pro-inflammatoires" — apparaît à l'étape cytokines -->
+            <text id="cyto-banner" x="200" y="40" text-anchor="middle"
+                  font-family="IBM Plex Mono" font-size="10.5" letter-spacing="0.22em"
+                  font-weight="700" fill="var(--alert)" opacity="0">MÉDIATEURS PRO-INFLAMMATOIRES</text>
+
             <!-- Cytokine labels -->
             <text id="cyto-1" class="cytokine" x="80"  y="195">TNF-α</text>
             <text id="cyto-2" class="cytokine" x="170" y="190">IL-6</text>
@@ -1672,17 +1684,34 @@
             <text id="cyto-5" class="cytokine" x="220" y="298">PAF</text>
             <text id="cyto-6" class="cytokine" x="305" y="295">NO</text>
 
-            <!-- Spark dots -->
+            <!-- Ripples (ondes concentriques) émanant de chaque leucocyte activé -->
+            <!-- 3 ondes par leucocyte = effet pulsé "émission radio" -->
+            <g id="ripples" pointer-events="none">
+              <circle class="ripple" data-cx="108" data-cy="243" cx="108" cy="243" r="6"/>
+              <circle class="ripple" data-cx="108" data-cy="243" cx="108" cy="243" r="6"/>
+              <circle class="ripple" data-cx="108" data-cy="243" cx="108" cy="243" r="6"/>
+              <circle class="ripple" data-cx="180" data-cy="252" cx="180" cy="252" r="6"/>
+              <circle class="ripple" data-cx="180" data-cy="252" cx="180" cy="252" r="6"/>
+              <circle class="ripple" data-cx="180" data-cy="252" cx="180" cy="252" r="6"/>
+              <circle class="ripple" data-cx="243" data-cy="238" cx="243" cy="238" r="6"/>
+              <circle class="ripple" data-cx="243" data-cy="238" cx="243" cy="238" r="6"/>
+              <circle class="ripple" data-cx="243" data-cy="238" cx="243" cy="238" r="6"/>
+              <circle class="ripple" data-cx="310" data-cy="247" cx="310" cy="247" r="6"/>
+              <circle class="ripple" data-cx="310" data-cy="247" cx="310" cy="247" r="6"/>
+              <circle class="ripple" data-cx="310" data-cy="247" cx="310" cy="247" r="6"/>
+            </g>
+
+            <!-- Spark dots — plus gros + halo doux -->
             <g>
-              <circle class="spark s-a" cx="108" cy="220" r="1.7"/>
-              <circle class="spark s-a" cx="98" cy="218" r="1.5"/>
-              <circle class="spark s-a" cx="118" cy="216" r="1.6"/>
-              <circle class="spark s-b" cx="243" cy="215" r="1.7"/>
-              <circle class="spark s-b" cx="252" cy="212" r="1.5"/>
-              <circle class="spark s-b" cx="234" cy="214" r="1.6"/>
-              <circle class="spark s-c" cx="180" cy="280" r="1.7"/>
-              <circle class="spark s-c" cx="188" cy="284" r="1.5"/>
-              <circle class="spark s-c" cx="172" cy="284" r="1.6"/>
+              <circle class="spark s-a" cx="108" cy="220" r="2.8"/>
+              <circle class="spark s-a" cx="98" cy="218" r="2.4"/>
+              <circle class="spark s-a" cx="118" cy="216" r="2.6"/>
+              <circle class="spark s-b" cx="243" cy="215" r="2.8"/>
+              <circle class="spark s-b" cx="252" cy="212" r="2.4"/>
+              <circle class="spark s-b" cx="234" cy="214" r="2.6"/>
+              <circle class="spark s-c" cx="180" cy="280" r="2.8"/>
+              <circle class="spark s-c" cx="188" cy="284" r="2.4"/>
+              <circle class="spark s-c" cx="172" cy="284" r="2.6"/>
             </g>
 
             <!-- Vasoplegia label -->
@@ -1967,6 +1996,8 @@
           // Cytokines cachées
           gsap.set(__sel('.cytokine'), { opacity: 0, y: 0 });
           gsap.set(__sel('.spark'), { opacity: 0, scale: 0.4 });
+          gsap.set(__sel('#cyto-banner'), { opacity: 0 });
+          gsap.set(__sel('.ripple'), { opacity: 0, attr: { r: 6 } });
 
           // Vaisseau en baseline
           gsap.set(__sel('#vaso-label'), { opacity: 0 });
@@ -2072,9 +2103,17 @@
           tl.to(__sel('#vbact-1'), { x: 130, duration: 3.2, ease: 'sine.inOut' },    '<0.2');  // s'arrête près PNN1
           tl.to(__sel('#vbact-2'), { x: 210, duration: 4.5, ease: 'power1.inOut' },  '<0.3');  // s'arrête près mono
           tl.to(__sel('#vbact-3'), { x: 270, duration: 3.6, ease: 'sine.inOut' },    '<0.1');  // s'arrête près PNN2
-          tl.to(__sel('#vbact-4'), { x: 460, duration: 6.5, ease: 'power1.in' },     '<0.4');  // SURVIVANTE → hors champ
+          // Survivantes : fade pendant les ~25% finaux de la trajectoire pour qu'elles
+          // disparaissent en sortie de cadre (viewBox=400, elles vont à x=460).
+          tl.to(__sel('#vbact-4'), { keyframes: [
+            { x: 380, duration: 4.9 },
+            { x: 460, opacity: 0, duration: 1.6 }
+          ], ease: 'power1.in' },                                            '<0.4');  // SURVIVANTE → fade hors champ
           tl.to(__sel('#vbact-5'), { x: 145, duration: 4.0, ease: 'power1.inOut' },  '<0.5');  // s'arrête près PNN1 (autre y)
-          tl.to(__sel('#vbact-6'), { x: 460, duration: 7.2, ease: 'power1.in' },     '<0.2');  // SURVIVANTE → hors champ
+          tl.to(__sel('#vbact-6'), { keyframes: [
+            { x: 380, duration: 5.5 },
+            { x: 460, opacity: 0, duration: 1.7 }
+          ], ease: 'power1.in' },                                            '<0.2');  // SURVIVANTE → fade hors champ
 
           // Ondulation Y légère pendant le déplacement (effet courant sanguin)
           tl.to(__sel('.vbact'), {
@@ -2105,10 +2144,17 @@
             $('state-lymph').textContent = 'activé'; $('state-lymph').className = 'num-state active';
           });
 
-          // Cytokine sparks + labels
-          tl.to(__sel('.spark'), { opacity: 0.9, scale: 1, duration: 0.3, stagger: 0.04 }, '+=0.1');
+          // Cytokine sparks + labels + bannière + ondes concentriques
+          tl.to(__sel('#cyto-banner'), { opacity: 1, duration: 0.5 }, '+=0.1');
+          tl.to(__sel('.spark'), { opacity: 0.95, scale: 1.2, duration: 0.3, stagger: 0.04 }, '<');
+          // Ondes : chaque leucocyte émet 3 vagues (stagger 0.18s) qui s'étendent en fadant
+          tl.fromTo(__sel('.ripple'),
+            { attr: { r: 6 }, opacity: 0.75 },
+            { attr: { r: 38 }, opacity: 0, duration: 1.6, stagger: { each: 0.18 }, ease: 'power1.out' },
+            '<0.05'
+          );
           tl.to(__sel('.cytokine'), { opacity: 1, y: -10, duration: 0.7, stagger: 0.08, ease: 'power2.out' }, '<0.2');
-          tl.to(__sel('.spark'), { opacity: 0, scale: 1.8, duration: 0.6 }, '<0.3');
+          tl.to(__sel('.spark'), { opacity: 0, scale: 1.9, duration: 0.6 }, '<0.3');
 
           // Vasoplegia
           tl.to(__sel('#vessel-wall-top'), { attr: { y: 142 }, duration: 0.8, ease: 'power2.inOut' }, '+=0.2');
