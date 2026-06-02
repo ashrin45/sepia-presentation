@@ -2860,5 +2860,20 @@
         else trigger();
     })();
     </script>
+
+    <!-- SEPIA — bascule grand schéma → deck (revient sur la diapo en cours) -->
+    <a id="sepia-todeck" href="./sepia-module-02-data.html" aria-label="Revenir à la présentation (deck), à la diapo en cours"
+       style="position:fixed;bottom:18px;left:20px;z-index:2147483600;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#9C9489;text-decoration:none;background:rgba(244,241,232,0.85);padding:6px 12px;border:1px solid #DDD7C9;transition:color .15s,border-color .15s;">◂ Présentation</a>
+    <script>
+    (function () {
+      var KEY = 'sepia.m02deck.slide';
+      var b = document.getElementById('sepia-todeck');
+      var n = 1;
+      try { var v = parseInt(localStorage.getItem(KEY), 10); if (v > 0) n = v; } catch (e) {}
+      b.href = './sepia-module-02-data.html#' + n;
+      b.onmouseenter = function () { b.style.color = '#B83B2A'; b.style.borderColor = '#B83B2A'; };
+      b.onmouseleave = function () { b.style.color = '#9C9489'; b.style.borderColor = '#DDD7C9'; };
+    })();
+    </script>
 </body>
 </html>
