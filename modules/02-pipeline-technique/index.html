@@ -61,8 +61,17 @@
         width: 100vw !important; height: 100vh !important; max-width: none !important;
         margin: 0 !important; border: 0 !important; border-radius: 0 !important;
         background: var(--ink-wash);
+        overflow-y: auto !important; overflow-x: hidden !important;
+        padding: 2px clamp(16px, 2vw, 40px) !important;
+        display: flex; flex-direction: column; justify-content: center;
     }
-    body.pipeline-immersive #embed-pipeline > section { width: 1780px !important; max-width: none !important; margin-left: auto !important; margin-right: auto !important; }
+    /* zoom:1 (pas de transform/zoom) → #embed-pipeline ne crée PAS de containing block,
+       donc le drawer .panel (position:fixed) reste relatif au viewport = plein écran correct. */
+    body.pipeline-immersive #embed-pipeline { zoom: 1 !important; transform: none !important; width: 100% !important; max-width: none !important; }
+    body.pipeline-immersive #embed-pipeline > section { width: 100% !important; max-width: none !important; margin: 0 !important; padding-top: 4px !important; padding-bottom: 4px !important; }
+    /* compacter les marges internes pour tenir en pleine hauteur sans scroll */
+    body.pipeline-immersive #embed-pipeline > section > .mt-3 { margin-top: 4px !important; }
+    body.pipeline-immersive #embed-pipeline .grid.grid-cols-12 { margin-top: 6px !important; padding-top: 6px !important; }
 
     .display { font-family: 'Newsreader', serif; font-weight: 400; letter-spacing: -0.04em; line-height: 1.02; color: var(--ink-primary); }
     .display em { font-style: italic; font-weight: 300; color: var(--ink-secondary); }
