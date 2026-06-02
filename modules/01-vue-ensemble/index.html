@@ -554,6 +554,7 @@
   .col-card {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 18px;
     padding: 36px 32px;
     background: #fff;
@@ -1161,6 +1162,7 @@
     margin: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 1fr;
     gap: 28px;
     max-width: 100%;
   }
@@ -1172,6 +1174,9 @@
     font-size: var(--type-body);
     color: var(--c-ink);
     line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   .limit-list li strong { color: var(--c-alert); font-weight: 700; }
 
@@ -3834,7 +3839,7 @@
     <div class="eyebrow"><span class="num">16</span><span>Risques et limites identifiés</span></div>
     <h1 class="title">Ce que ce projet <em style="color: var(--c-alert); font-style: normal;">ne fera pas</em>.</h1>
 
-    <ul class="limit-list" style="margin-top: auto;">
+    <ul class="limit-list" style="margin-top: 40px; flex: 1; min-height: 0;">
       <li>Le modèle visera les patients <strong>où une hémoculture a été demandée</strong> (pas la population générale)</li>
       <li>L'hémoculture+ <strong>≠</strong> sepsis stricto sensu (proxy biologique assumé)</li>
       <li>Volume <strong>modéré</strong> de données → résultats à confirmer sur plus large échelle</li>
@@ -3854,7 +3859,7 @@
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; flex: 1; align-items: stretch; margin-top: auto;">
 
-      <div style="background: #fff; border: 1px solid var(--c-rule); border-top: 6px solid var(--c-primary); padding: 48px 44px; display: flex; flex-direction: column; gap: 18px;">
+      <div style="background: #fff; border: 1px solid var(--c-rule); border-top: 6px solid var(--c-primary); padding: 48px 44px; display: flex; flex-direction: column; justify-content: center; gap: 18px;">
         <div style="font-family: 'JetBrains Mono', monospace; font-size: 20px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--c-primary); font-weight: 600;">Module 02</div>
         <div style="font-family: 'Newsreader', serif; font-size: 56px; font-weight: 400; line-height: 1.05; letter-spacing: -0.02em; color: var(--c-ink);">Pipeline <em style="color: var(--c-primary); font-style: italic; font-weight: 300;">technique</em></div>
         <p style="font-size: var(--type-body); color: var(--c-secondary); line-height: 1.45; margin: 0;">
@@ -3862,7 +3867,7 @@
         </p>
       </div>
 
-      <div style="background: #fff; border: 1px solid var(--c-rule); border-top: 6px solid var(--c-secondary); padding: 48px 44px; display: flex; flex-direction: column; gap: 18px;">
+      <div style="background: #fff; border: 1px solid var(--c-rule); border-top: 6px solid var(--c-secondary); padding: 48px 44px; display: flex; flex-direction: column; justify-content: center; gap: 18px;">
         <div style="font-family: 'JetBrains Mono', monospace; font-size: 20px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--c-secondary); font-weight: 600;">Module 03</div>
         <div style="font-family: 'Newsreader', serif; font-size: 56px; font-weight: 400; line-height: 1.05; letter-spacing: -0.02em; color: var(--c-ink);">Cadre <em style="color: var(--c-primary); font-style: italic; font-weight: 300;">réglementaire</em></div>
         <p style="font-size: var(--type-body); color: var(--c-secondary); line-height: 1.45; margin: 0;">
