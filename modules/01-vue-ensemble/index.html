@@ -764,6 +764,14 @@
   .hero-anim .hero-text { align-self: center; min-width: 0; }
   .hero-anim .embed-fit-wrapper { min-height: 0; }
 
+  /* ───── Frise « 3 temps » (slide 02 définition) ───── */
+  .sepsis-steps { display: flex; align-items: stretch; gap: 18px; margin: 30px 0; }
+  .sstep { flex: 1; display: flex; gap: 16px; align-items: flex-start; background: var(--c-bg-tinted); border-left: 4px solid var(--c-primary); padding: 24px 26px; }
+  .sstep-k { font-family: "JetBrains Mono", Consolas, monospace; font-size: 22px; font-weight: 700; color: var(--c-primary); flex: 0 0 auto; }
+  .sstep-t { font-size: 23px; font-weight: 600; color: var(--c-ink); line-height: 1.2; }
+  .sstep-d { font-size: 18px; color: var(--c-ink-soft); margin-top: 5px; line-height: 1.35; }
+  .sstep-arrow { display: flex; align-items: center; font-size: 34px; color: var(--c-primary); font-weight: 300; }
+
   /* ───── Closing card (slide 16) ───── */
   .closing-grid {
     display: grid;
@@ -1314,18 +1322,35 @@
       <div><span class="label">Porteur</span><span class="val">Dr Ahmed Ashrin · CHI André Grégoire</span></div>
     </div>
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>01 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>01 / 17</span></div>
 </section>
-<section data-label="02 Qu'est-ce que le sepsis" class="hero-anim">
+<section data-label="02 Qu'est-ce que le sepsis">
   <div class="frame">
-    <div class="hero-text">
-      <div class="eyebrow"><span class="num">02</span><span>Pré-requis · définition</span></div>
-      <h1 class="title" style="font-size: 40px; line-height: 1.12; margin: 4px 0 16px;">Le sepsis n'est pas la bactérie — c'est l'<em style="color: var(--c-primary); font-style: normal;">emballement</em>.</h1>
+    <div class="eyebrow"><span class="num">02</span><span>Pré-requis · définition</span></div>
+    <h1 class="title">Le sepsis n'est pas la bactérie — c'est l'<em style="color: var(--c-primary); font-style: normal;">emballement</em>.</h1>
 
-      <p style="font-size: 18px; color: var(--c-ink-soft); margin: 0; line-height: 1.5;">
-        <strong style="color: var(--c-primary);">Sepsis-3</strong> (Singer et al., <em>JAMA</em> 2016) : dysrégulation potentiellement mortelle de la réponse de l'hôte à une infection, entraînant une dysfonction d'organe. Le sepsis se voit à travers ses conséquences — l'animation reconstitue la cascade <strong>foyer → médiateurs → organes</strong>.
-      </p>
+    <p style="font-size: var(--type-lead); color: var(--c-secondary); margin: 0 0 8px; max-width: 1550px; line-height: 1.4;">
+      <strong style="color: var(--c-primary);">Sepsis-3</strong> (Singer et al., <em>JAMA</em> 2016) : une <strong>dysrégulation potentiellement mortelle de la réponse de l'hôte à une infection</strong>, entraînant une dysfonction d'organe.
+    </p>
+
+    <div class="sepsis-steps">
+      <div class="sstep"><span class="sstep-k">01</span><div><div class="sstep-t">Foyer infectieux</div><div class="sstep-d">une infection localisée (ex. pneumonie)</div></div></div>
+      <div class="sstep-arrow">→</div>
+      <div class="sstep"><span class="sstep-k">02</span><div><div class="sstep-t">Médiateurs pro-inflammatoires</div><div class="sstep-d">cytokines, vasoplégie systémique</div></div></div>
+      <div class="sstep-arrow">→</div>
+      <div class="sstep"><span class="sstep-k">03</span><div><div class="sstep-t">Dysfonction d'organe</div><div class="sstep-d">SOFA ≥ 2 — le sepsis est défini</div></div></div>
     </div>
+
+    <p style="font-size: 20px; color: var(--c-ink-soft); margin: auto 0 0; font-style: italic;">
+      Le sepsis ne se voit pas directement — il se lit à travers ses conséquences. La diapo suivante reconstitue cette cascade, en direct.
+    </p>
+  </div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>02 / 17</span></div>
+</section>
+<section data-label="03 La cascade inflammatoire en direct">
+  <div class="frame">
+    <div class="eyebrow"><span class="num">03</span><span>Démonstration</span></div>
+    <h1 class="title" style="margin-bottom: 14px;">La cascade inflammatoire, <em style="color: var(--c-primary); font-style: normal;">en direct</em>.</h1>
 
     <div class="embed-fit-wrapper" style="border: 1px solid var(--c-rule); background: #FFF1E5; flex: 1;">
       <!-- ====== INLINE: animation-sepsis.html (scope #embed-sepsis) ====== -->
@@ -1380,7 +1405,8 @@
       #embed-sepsis .panel-svg { background: #FFFAF1; border: 1px solid var(--rule); display: block; width: 100%; height: auto; }
       #embed-sepsis .servier-base { opacity: 1; }
       #embed-sepsis .bact { opacity: 0; transform-origin: center; transform-box: fill-box; }
-      #embed-sepsis .halo { fill: none; stroke: var(--alert); stroke-width: 1.3; stroke-dasharray: 3 3; opacity: 0; }
+      #embed-sepsis .halo-glow { opacity: 0; transform-box: fill-box; transform-origin: center; }
+      #embed-sepsis .halo-ring { fill: none; stroke: var(--alert); stroke-width: 1.6; opacity: 0; transform-box: fill-box; transform-origin: center; }
       #embed-sepsis .leuko { opacity: 0; transform-origin: center; transform-box: fill-box; }
       #embed-sepsis .leuko-glow {
           opacity: 0;
@@ -1631,6 +1657,13 @@
           </h3>
           <svg id="panel-foyer" class="panel-svg" viewBox="0 0 400 480">
             <rect x="0" y="0" width="400" height="480" fill="#FFFAF1"/>
+            <defs>
+              <radialGradient id="inflam-glow">
+                <stop offset="0%" stop-color="var(--alert)" stop-opacity="0.34"/>
+                <stop offset="55%" stop-color="var(--alert)" stop-opacity="0.13"/>
+                <stop offset="100%" stop-color="var(--alert)" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
 
             <!-- Lungs anatomy (Servier) -->
             <image href="../../assets/img/anatomy/lungs-pair.png"
@@ -1665,9 +1698,10 @@
               <image class="bact b-wave3" href="../../assets/img/anatomy/bacterium.png" x="295" y="335" width="14" height="14"/>
             </g>
 
-            <!-- Inflammation halos -->
-            <circle id="halo1" class="halo" cx="262" cy="305" r="22"/>
-            <circle id="halo2" class="halo" cx="262" cy="305" r="36"/>
+            <!-- Inflammation : glow rouge diffus + 2 ondes pleines -->
+            <circle id="halo-glow" class="halo-glow" cx="262" cy="305" r="68" fill="url(#inflam-glow)"/>
+            <circle id="halo1" class="halo-ring" cx="262" cy="305" r="26"/>
+            <circle id="halo2" class="halo-ring" cx="262" cy="305" r="44"/>
 
             <!-- Annotation -->
             <line id="b-leader" x1="262" y1="295" x2="350" y2="245" stroke="var(--ink-mute)" stroke-width="0.6" opacity="0"/>
@@ -1686,6 +1720,11 @@
           </h3>
           <svg id="panel-cascade" class="panel-svg" viewBox="0 0 400 480">
             <rect x="0" y="0" width="400" height="480" fill="#FFFAF1"/>
+            <defs>
+              <!-- Les bactéries (#vbacts) ne sont visibles que dans la lumière du
+                   vaisseau : clip à l'emprise max du vessel-lumen (x 30-370). -->
+              <clipPath id="lumen-clip"><rect x="30" y="145" width="340" height="198"/></clipPath>
+            </defs>
 
             <!-- Vessel structure (vasoplegia animatable) -->
             <g id="vessel">
@@ -1741,7 +1780,7 @@
             </g>
 
             <!-- Bactéries circulant dans le vaisseau (initialement hors champ à gauche) -->
-            <g id="vbacts">
+            <g id="vbacts" clip-path="url(#lumen-clip)">
               <image class="vbact" id="vbact-1" href="../../assets/img/anatomy/bacterium.png" x="-30" y="195" width="16" height="16"/>
               <image class="vbact" id="vbact-2" href="../../assets/img/anatomy/bacterium.png" x="-30" y="240" width="16" height="16"/>
               <image class="vbact" id="vbact-3" href="../../assets/img/anatomy/bacterium.png" x="-30" y="208" width="16" height="16"/>
@@ -1838,16 +1877,17 @@
             <span><span class="num">3</span> · Dysfonction d'organe</span>
             <span class="sub">SOFA ≥ 2 = sepsis</span>
           </h3>
-          <svg id="panel-organes" class="panel-svg" viewBox="0 0 400 600">
+          <svg id="panel-organes" class="panel-svg" viewBox="0 0 400 520">
             <defs>
-              <!-- Crop : on cache les jambes (de y=540 vers le bas).
-                   La silhouette est rendue à 346x900 (au lieu de 200x520),
-                   puis clippée pour ne montrer que tête + chest + abdomen. -->
+              <!-- Crop serré sur le tronc (tête -> haut bassin) : on clippe la
+                   silhouette plus haut (y=475) pour que le panneau ne soit pas plus
+                   haut que les deux autres. Les marqueurs CIVD et le bloc SOFA ont
+                   ete remontes en consequence. -->
               <clipPath id="body-clip">
-                <rect x="0" y="0" width="400" height="540"/>
+                <rect x="0" y="0" width="400" height="475"/>
               </clipPath>
             </defs>
-            <rect x="0" y="0" width="400" height="600" fill="#FFFAF1"/>
+            <rect x="0" y="0" width="400" height="520" fill="#FFFAF1"/>
 
             <!-- Body silhouette (Servier) — 346x900 + clippée à y=540
                  Avec body image 346x900 @y=10 (native 501x1302, ratio préservé),
@@ -1901,20 +1941,20 @@
             <text id="lbl-kidney-sub" class="organ-label sub" x="58" y="382">créat ↑ · oligurie</text>
             <path id="lead-kidney" class="organ-leader" d="M 127 373 L 110 373"/>
 
-            <!-- Coagulation / pétéchies — peau du bas-ventre (y=510-545) -->
+            <!-- Coagulation / pétéchies — remontées sur l'abdomen visible (CIVD) -->
             <g id="coag-marks" opacity="0">
-              <circle cx="165" cy="513" r="2.3" fill="var(--alert)"/>
-              <circle cx="183" cy="521" r="2" fill="var(--alert)"/>
-              <circle cx="205" cy="528" r="2.3" fill="var(--alert)"/>
-              <circle cx="225" cy="518" r="1.9" fill="var(--alert)"/>
-              <circle cx="240" cy="528" r="2.1" fill="var(--alert)"/>
-              <circle cx="175" cy="540" r="2" fill="var(--alert)"/>
-              <circle cx="230" cy="542" r="2.1" fill="var(--alert)"/>
-              <circle cx="200" cy="546" r="1.9" fill="var(--alert)"/>
+              <circle cx="165" cy="433" r="2.3" fill="var(--alert)"/>
+              <circle cx="183" cy="441" r="2" fill="var(--alert)"/>
+              <circle cx="205" cy="448" r="2.3" fill="var(--alert)"/>
+              <circle cx="225" cy="438" r="1.9" fill="var(--alert)"/>
+              <circle cx="240" cy="448" r="2.1" fill="var(--alert)"/>
+              <circle cx="175" cy="460" r="2" fill="var(--alert)"/>
+              <circle cx="230" cy="462" r="2.1" fill="var(--alert)"/>
+              <circle cx="200" cy="466" r="1.9" fill="var(--alert)"/>
             </g>
-            <text id="lbl-coag" class="organ-label" x="272" y="520">CIVD</text>
-            <text id="lbl-coag-sub" class="organ-label sub" x="272" y="532">D-dim · plq ↓</text>
-            <path id="lead-coag" class="organ-leader" d="M 248 524 L 270 524"/>
+            <text id="lbl-coag" class="organ-label" x="272" y="440">CIVD</text>
+            <text id="lbl-coag-sub" class="organ-label sub" x="272" y="452">D-dim · plq ↓</text>
+            <path id="lead-coag" class="organ-leader" d="M 248 444 L 270 444"/>
 
             <!-- Liver — placé en DERNIER pour passer au premier plan
                  (rend par-dessus poumons / cœur / reins en cas de chevauchement) -->
@@ -1925,18 +1965,18 @@
             <text id="lbl-liver-sub" class="organ-label sub" x="272" y="317">bilirubine ↑</text>
             <path id="lead-liver" class="organ-leader" d="M 222 308 L 270 308"/>
 
-            <!-- Compteur SOFA (live) — sous la silhouette clippée -->
+            <!-- Compteur SOFA (live) — sous la silhouette clippée (remonté) -->
             <g id="sofa-live" opacity="0">
-              <rect x="40" y="555" width="100" height="42" fill="#FFFAF1" stroke="var(--ink)" stroke-width="1.2"/>
-              <text x="90" y="570" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" letter-spacing="0.18em" fill="var(--ink-mute)" style="text-transform: uppercase;">SOFA</text>
-              <text id="sofa-counter" x="90" y="592" text-anchor="middle" font-family="Source Serif 4" font-size="22" font-weight="700" fill="var(--alert)">0</text>
+              <rect x="40" y="475" width="100" height="42" fill="#FFFAF1" stroke="var(--ink)" stroke-width="1.2"/>
+              <text x="90" y="490" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" letter-spacing="0.18em" fill="var(--ink-mute)" style="text-transform: uppercase;">SOFA</text>
+              <text id="sofa-counter" x="90" y="512" text-anchor="middle" font-family="Source Serif 4" font-size="22" font-weight="700" fill="var(--alert)">0</text>
             </g>
 
-            <!-- SOFA badge "sepsis défini" — sous la silhouette clippée -->
+            <!-- SOFA badge "sepsis défini" — sous la silhouette clippée (remonté) -->
             <g id="sofa-badge" class="sofa-badge">
-              <rect x="150" y="555" width="210" height="42" fill="var(--alert)" stroke="var(--ink)" stroke-width="1.4"/>
-              <text class="sofa-text" x="255" y="573" font-size="15" letter-spacing="0.08em">SOFA ≥ 2</text>
-              <text class="sofa-text" x="255" y="589" font-size="9" letter-spacing="0.1em" style="text-transform: uppercase;">sepsis défini</text>
+              <rect x="150" y="475" width="210" height="42" fill="var(--alert)" stroke="var(--ink)" stroke-width="1.4"/>
+              <text class="sofa-text" x="255" y="493" font-size="15" letter-spacing="0.08em">SOFA ≥ 2</text>
+              <text class="sofa-text" x="255" y="509" font-size="9" letter-spacing="0.1em" style="text-transform: uppercase;">sepsis défini</text>
             </g>
           </svg>
           <p style="font-family:'Source Serif 4',serif; font-style:italic; font-size:12px; color:var(--ink-mute); margin: 8px 4px 0;">
@@ -2060,7 +2100,7 @@
           killCurrentTl();
           // Bactéries panel 1 : opacity-only (apparaissent en place, ne se déplacent pas)
           gsap.set(__sel('.bact'), { opacity: 0 });
-          gsap.set(__sel('.halo'), { opacity: 0, scale: 0.6 });
+          gsap.set(__sel('.halo-ring, .halo-glow'), { opacity: 0, scale: 0.6 });
           gsap.set(__sel('#b-leader, #b-label'), { opacity: 0 });
 
           // Bactéries panel 2 (vbacts) : hors champ à gauche, transparentes
@@ -2157,7 +2197,8 @@
           tl.to(__sel('#b1'), { opacity: 1, duration: 0.5, ease: 'power1.out' }, '+=0.2');
           tl.to(__sel('#b-leader, #b-label'), { opacity: 1, duration: 0.4 }, '<');
           tl.to(__sel('.b-wave1'), { opacity: 1, duration: 0.5, stagger: 0.1, ease: 'power1.out' }, '+=0.3');
-          tl.to(__sel('#halo1'), { opacity: 0.75, scale: 1, duration: 0.6 }, '<0.2');
+          tl.to(__sel('#halo-glow'), { opacity: 1, scale: 1, duration: 0.7, ease: 'power1.out' }, '<0.2');
+          tl.to(__sel('#halo1'), { opacity: 0.7, scale: 1, duration: 0.6 }, '<');
           tl.to(__sel('.b-wave2'), { opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power1.out' }, '+=0.2');
           tl.to(__sel('#halo2'), { opacity: 0.55, scale: 1, duration: 0.8 }, '<0.2');
           tl.to(__sel('.b-wave3'), { opacity: 1, duration: 0.5, stagger: 0.06, ease: 'power1.out' }, '+=0.1');
@@ -2229,7 +2270,7 @@
           // Ondes : chaque leucocyte émet 3 vagues (stagger 0.18s) qui s'étendent en fadant
           tl.fromTo(__sel('.ripple'),
             { attr: { r: 6 }, opacity: 0.75 },
-            { attr: { r: 38 }, opacity: 0, duration: 1.6, stagger: { each: 0.18 }, ease: 'power1.out' },
+            { attr: { r: 38 }, opacity: 0, duration: 1.6, stagger: { each: 0.18 }, ease: 'power1.out', immediateRender: false },
             '<0.05'
           );
           tl.to(__sel('.cytokine'), { opacity: 1, y: -10, duration: 0.7, stagger: 0.08, ease: 'power2.out' }, '<0.2');
@@ -2500,11 +2541,11 @@
       <!-- ====== END INLINE: animation-sepsis.html ====== -->
     </div>
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>02 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>03 / 17</span></div>
 </section>
-<section data-label="03 Sepsis : chaque heure compte">
+<section data-label="04 Sepsis : chaque heure compte">
   <div class="frame">
-    <div class="eyebrow"><span class="num">03</span><span>Le problème clinique</span></div>
+    <div class="eyebrow"><span class="num">04</span><span>Le problème clinique</span></div>
     <h1 class="title">Sepsis : chaque heure compte.</h1>
 
     <div class="grid-2" style="gap: 100px; align-items: center; flex: 1;">
@@ -2521,11 +2562,11 @@
       </div>
     </div>
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>03 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>04 / 17</span></div>
 </section>
-<section data-label="04 Hémoculture : gold standard mais lente">
+<section data-label="05 Hémoculture : gold standard mais lente">
   <div class="frame">
-    <div class="eyebrow"><span class="num">04</span><span>Goulot d'étranglement biologique</span></div>
+    <div class="eyebrow"><span class="num">05</span><span>Goulot d'étranglement biologique</span></div>
     <h1 class="title">L'hémoculture, gold standard mais lente.</h1>
 
     <ul class="bullets" style="max-width: 1400px;">
@@ -2560,11 +2601,11 @@
       </div>
     </div>
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>04 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>05 / 17</span></div>
 </section>
-<section data-label="05 Processus de détection de l'hémoculture">
+<section data-label="06 Processus de détection de l'hémoculture">
   <div class="frame">
-    <div class="eyebrow"><span class="num">05</span><span>Comment fonctionne une hémoculture</span></div>
+    <div class="eyebrow"><span class="num">06</span><span>Comment fonctionne une hémoculture</span></div>
     <h1 class="title">Détecter une bactériémie&nbsp;: cinq étapes, 12 à 24 heures.</h1>
 
     <p style="font-size: 26px; color: var(--c-secondary); margin: 0 0 24px; max-width: 1500px; line-height: 1.4;">
@@ -2746,11 +2787,11 @@
 
 
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>05 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>06 / 17</span></div>
 </section>
-<section data-label="06 Les cellules mesurées par l'automate">
+<section data-label="07 Les cellules mesurées par l'automate">
   <div class="frame">
-    <div class="eyebrow"><span class="num">06</span><span>Cellules sanguines</span></div>
+    <div class="eyebrow"><span class="num">07</span><span>Cellules sanguines</span></div>
     <h1 class="title">Ce que l'automate mesure, cellule par cellule.</h1>
 
     <p style="font-size: var(--type-lead); color: var(--c-secondary); margin: 0 0 32px; max-width: 1500px;">
@@ -2801,11 +2842,11 @@
       Quatre populations principales identifiées par l'automate à partir de leur signature optique.
     </p>
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>06 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>07 / 17</span></div>
 </section>
-<section data-label="07 Comment les scattergrams sont formés">
+<section data-label="08 Comment les scattergrams sont formés">
   <div class="frame">
-    <div class="eyebrow"><span class="num">07</span><span>Principe technique</span></div>
+    <div class="eyebrow"><span class="num">08</span><span>Principe technique</span></div>
     <h1 class="title">Comment les scattergrams sont formés.</h1>
 
     <p style="font-size: var(--type-lead); color: var(--c-secondary); margin: 0 0 28px; max-width: 1500px;">Cytométrie en flux&nbsp;: chaque cellule traverse un faisceau laser et produit <strong style="color: var(--c-primary);">trois signaux mesurables</strong>. Une cellule = un point sur le scattergram. Le canal <strong>WDF</strong> (<em>Wide Differential</em>) est celui qui sépare les cinq populations leucocytaires.</p>
@@ -2855,11 +2896,11 @@
       </div>
     </div>
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>07 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>08 / 17</span></div>
 </section>
-<section data-label="08 Animation scattergram">
+<section data-label="09 Animation scattergram">
   <div class="frame">
-    <div class="eyebrow"><span class="num">08</span><span>Animation interactive</span></div>
+    <div class="eyebrow"><span class="num">09</span><span>Animation interactive</span></div>
     <h1 class="title" style="margin-bottom: 16px;">Voir la formation d'un scattergram, <em style="color: var(--c-primary); font-style: normal;">en direct</em>.</h1>
     <p style="font-size: var(--type-lead); color: var(--c-secondary); margin: 0 0 16px; max-width: 1500px;">
       Reconstruction temps-réel — cellule par cellule, du laser au point sur le scattergram WDF.
@@ -3542,11 +3583,11 @@
       <!-- ====== END INLINE: animation-scattergram.html ====== -->
     </div>
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>08 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>09 / 17</span></div>
 </section>
-<section data-label="09 La NFS contient bien plus">
+<section data-label="10 La NFS contient bien plus">
   <div class="frame">
-    <div class="eyebrow"><span class="num">09</span><span>L'opportunité</span></div>
+    <div class="eyebrow"><span class="num">10</span><span>L'opportunité</span></div>
     <h1 class="title">La NFS contient <em style="color: var(--c-accent); font-style: normal;">bien plus</em> que ce qu'on en lit.</h1>
 
     <div class="opportunity" style="flex: 1; grid-template-columns: 1.15fr 1fr;">
@@ -3578,11 +3619,11 @@
       </div>
     </div>
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>09 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>10 / 17</span></div>
 </section>
-<section data-label="10 Lymphocyte activé">
+<section data-label="11 Lymphocyte activé">
   <div class="frame">
-    <div class="eyebrow"><span class="num">10</span><span>Morphologie &amp; inflammation</span></div>
+    <div class="eyebrow"><span class="num">11</span><span>Morphologie &amp; inflammation</span></div>
     <h1 class="title">Lymphocyte activé&nbsp;: tout un spectre morphologique.</h1>
 
     <div style="display: grid; grid-template-columns: 1.45fr 1fr; gap: 64px; flex: 1; align-items: center;">
@@ -3608,11 +3649,11 @@
       </div>
     </div>
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>10 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>11 / 17</span></div>
 </section>
-<section data-label="11 Polynucléaire neutrophile activé">
+<section data-label="12 Polynucléaire neutrophile activé">
   <div class="frame">
-    <div class="eyebrow"><span class="num">11</span><span>Morphologie &amp; inflammation</span></div>
+    <div class="eyebrow"><span class="num">12</span><span>Morphologie &amp; inflammation</span></div>
     <h1 class="title">Le polynucléaire neutrophile activé.</h1>
 
     <div style="display: grid; grid-template-columns: 1fr 1.15fr; gap: 64px; flex: 1; align-items: center;">
@@ -3650,11 +3691,11 @@
       </div>
     </div>
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>11 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>12 / 17</span></div>
 </section>
-<section data-label="12 Prédire l'hémoculture à partir de la NFS">
+<section data-label="13 Prédire l'hémoculture à partir de la NFS">
   <div class="frame">
-    <div class="eyebrow"><span class="num">12</span><span>Hypothèse SEPIA</span></div>
+    <div class="eyebrow"><span class="num">13</span><span>Hypothèse SEPIA</span></div>
     <h1 class="title">Prédire le résultat d'une hémoculture à partir de la NFS qui l'accompagne.</h1>
 
     <ul class="bullets" style="max-width: 1500px;">
@@ -3688,11 +3729,11 @@
       <div class="lab">gain potentiel sur la fenêtre décisionnelle d'antibiothérapie.</div>
     </div>
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>12 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>13 / 17</span></div>
 </section>
-<section data-label="13 Pour qui, pour quoi">
+<section data-label="14 Pour qui, pour quoi">
   <div class="frame">
-    <div class="eyebrow"><span class="num">13</span><span>Bénéfices attendus</span></div>
+    <div class="eyebrow"><span class="num">14</span><span>Bénéfices attendus</span></div>
     <h1 class="title">Pour qui, pour quoi.</h1>
 
     <div class="grid-3" style="margin-top: auto; flex: 1; align-items: stretch;">
@@ -3724,11 +3765,11 @@
       </div>
     </div>
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>13 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>14 / 17</span></div>
 </section>
-<section data-label="14 Une démarche en deux phases">
+<section data-label="15 Une démarche en deux phases">
   <div class="frame">
-    <div class="eyebrow"><span class="num">14</span><span>Calendrier prévisionnel</span></div>
+    <div class="eyebrow"><span class="num">15</span><span>Calendrier prévisionnel</span></div>
     <h1 class="title">Une démarche en deux phases.</h1>
 
     <p style="font-size: var(--type-lead); color: var(--c-secondary); margin: 0 0 12px; max-width: 1400px;">
@@ -3776,11 +3817,11 @@
       </div>
     </div>
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>14 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>15 / 17</span></div>
 </section>
-<section data-label="15 Ce que ce projet ne fera pas">
+<section data-label="16 Ce que ce projet ne fera pas">
   <div class="frame">
-    <div class="eyebrow"><span class="num">15</span><span>Risques et limites identifiés</span></div>
+    <div class="eyebrow"><span class="num">16</span><span>Risques et limites identifiés</span></div>
     <h1 class="title">Ce que ce projet <em style="color: var(--c-alert); font-style: normal;">ne fera pas</em>.</h1>
 
     <ul class="limit-list" style="margin-top: auto;">
@@ -3790,11 +3831,11 @@
       <li>Différences <strong>inter-instruments</strong> XN à valider en QC</li>
     </ul>
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>15 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>16 / 17</span></div>
 </section>
-<section data-label="16 Pour aller plus loin">
+<section data-label="17 Pour aller plus loin">
   <div class="frame">
-    <div class="eyebrow"><span class="num">16</span><span>Suite du parcours</span></div>
+    <div class="eyebrow"><span class="num">17</span><span>Suite du parcours</span></div>
     <h1 class="title">Pour aller <em style="color: var(--c-primary); font-style: normal;">plus loin</em>.</h1>
 
     <p style="font-size: var(--type-lead); color: var(--c-secondary); margin: 0 0 48px; max-width: 1500px;">
@@ -3821,7 +3862,7 @@
 
     </div>
   </div>
-  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>16 / 16</span></div>
+  <div class="footer"><span class="brand">SEPIA · Module 01</span><span class="rule"></span><span>17 / 17</span></div>
 </section>
 </deck-stage>
 
