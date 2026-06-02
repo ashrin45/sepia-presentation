@@ -1386,7 +1386,7 @@
         }
       #embed-sepsis .sepsis-embed {
           display: grid;
-          grid-template-columns: 1fr 1.05fr 1fr;
+          grid-template-columns: 1fr 1fr 1fr;
           gap: 18px;
           padding: 20px;
           align-items: start;
@@ -1669,8 +1669,8 @@
             <span><span class="num">1</span> · Foyer infectieux</span>
             <span class="sub">poumon, infection bactérienne</span>
           </h3>
-          <svg id="panel-foyer" class="panel-svg" viewBox="0 0 400 480">
-            <rect x="0" y="0" width="400" height="480" fill="#FFFAF1"/>
+          <svg id="panel-foyer" class="panel-svg" viewBox="0 0 400 520">
+            <rect x="0" y="0" width="400" height="520" fill="#FFFAF1"/>
             <defs>
               <radialGradient id="inflam-glow">
                 <stop offset="0%" stop-color="var(--alert)" stop-opacity="0.34"/>
@@ -1685,8 +1685,6 @@
                    preserveAspectRatio="xMidYMid meet"
                    class="servier-base"/>
 
-            <!-- Focus zone (dashed circle around right lung bronchial tree end) -->
-            <ellipse cx="262" cy="305" rx="48" ry="36" fill="none" stroke="var(--ink)" stroke-width="0.9" stroke-dasharray="3 3" opacity="0.55"/>
             <text x="262" y="375" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="var(--ink-mute)" letter-spacing="1.4">foyer infectieux</text>
 
             <!-- Single starting bacterium -->
@@ -1713,9 +1711,7 @@
             </g>
 
             <!-- Inflammation : glow rouge diffus + 2 ondes pleines -->
-            <circle id="halo-glow" class="halo-glow" cx="262" cy="305" r="68" fill="url(#inflam-glow)"/>
-            <circle id="halo1" class="halo-ring" cx="262" cy="305" r="26"/>
-            <circle id="halo2" class="halo-ring" cx="262" cy="305" r="44"/>
+            <circle id="halo-glow" class="halo-glow" cx="262" cy="305" r="72" fill="url(#inflam-glow)"/>
 
             <!-- Annotation -->
             <line id="b-leader" x1="262" y1="295" x2="350" y2="245" stroke="var(--ink-mute)" stroke-width="0.6" opacity="0"/>
@@ -1732,8 +1728,8 @@
             <span><span class="num">2</span> · Cascade systémique</span>
             <span class="sub">leucocytes activés &amp; cytokines</span>
           </h3>
-          <svg id="panel-cascade" class="panel-svg" viewBox="0 0 400 480">
-            <rect x="0" y="0" width="400" height="480" fill="#FFFAF1"/>
+          <svg id="panel-cascade" class="panel-svg" viewBox="0 0 400 520">
+            <rect x="0" y="0" width="400" height="520" fill="#FFFAF1"/>
             <defs>
               <!-- Les bactéries (#vbacts) ne sont visibles que dans la lumière du
                    vaisseau : clip à l'emprise max du vessel-lumen (x 30-370). -->
@@ -1748,13 +1744,6 @@
               <path id="endo-top" d="M 30 162 L 370 162" class="endothelium"/>
               <path id="endo-bot" d="M 30 324 L 370 324" class="endothelium"/>
             </g>
-
-            <!-- Arterial wall detail (Servier) — small inset in upper-left -->
-            <image href="../../assets/img/anatomy/artery-wall.png"
-                   x="30" y="42" width="80" height="86"
-                   preserveAspectRatio="xMidYMid meet" opacity="0.9"/>
-            <line x1="115" y1="105" x2="160" y2="160" stroke="var(--ink-mute)" stroke-width="0.6" stroke-dasharray="2 2"/>
-            <text x="32" y="138" font-family="IBM Plex Mono" font-size="8" fill="var(--ink-mute)" letter-spacing="0.8">PAROI · ENDOTHÉLIUM</text>
 
             <!-- Annotations vessel -->
             <text x="200" y="148" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" fill="var(--ink-mute)" letter-spacing="1.4">VAISSEAU SANGUIN</text>
@@ -1859,8 +1848,14 @@
               <marker id="arrDown" markerWidth="6" markerHeight="6" refX="3" refY="6" orient="auto"><polygon points="0,0 6,0 3,6" fill="var(--alert)"/></marker>
             </defs>
 
-            <!-- Numération -->
-            <foreignObject x="30" y="378" width="340" height="100">
+            <!-- Paroi · endothélium (vignette, à droite de la numération) -->
+            <image href="../../assets/img/anatomy/artery-wall.png"
+                   x="268" y="390" width="92" height="88"
+                   preserveAspectRatio="xMidYMid meet" opacity="0.9"/>
+            <text x="314" y="384" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="var(--ink-mute)" letter-spacing="0.8">PAROI · ENDOTHÉLIUM</text>
+
+            <!-- Numération (largeur réduite) -->
+            <foreignObject x="30" y="378" width="224" height="100">
               <div xmlns="http://www.w3.org/1999/xhtml" class="numeration">
                 <div class="num-row">
                   <div class="num-swatch" style="background: #F8C8D4;"></div>
@@ -2114,7 +2109,7 @@
           killCurrentTl();
           // Bactéries panel 1 : opacity-only (apparaissent en place, ne se déplacent pas)
           gsap.set(__sel('.bact'), { opacity: 0 });
-          gsap.set(__sel('.halo-ring, .halo-glow'), { opacity: 0, scale: 0.6 });
+          gsap.set(__sel('#halo-glow'), { opacity: 0 });
           gsap.set(__sel('#b-leader, #b-label'), { opacity: 0 });
 
           // Bactéries panel 2 (vbacts) : hors champ à gauche, transparentes
@@ -2211,10 +2206,8 @@
           tl.to(__sel('#b1'), { opacity: 1, duration: 0.5, ease: 'power1.out' }, '+=0.2');
           tl.to(__sel('#b-leader, #b-label'), { opacity: 1, duration: 0.4 }, '<');
           tl.to(__sel('.b-wave1'), { opacity: 1, duration: 0.5, stagger: 0.1, ease: 'power1.out' }, '+=0.3');
-          tl.to(__sel('#halo-glow'), { opacity: 1, scale: 1, duration: 0.7, ease: 'power1.out' }, '<0.2');
-          tl.to(__sel('#halo1'), { opacity: 0.7, scale: 1, duration: 0.6 }, '<');
+          tl.to(__sel('#halo-glow'), { opacity: 1, duration: 0.7, ease: 'power1.out' }, '<0.2');
           tl.to(__sel('.b-wave2'), { opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power1.out' }, '+=0.2');
-          tl.to(__sel('#halo2'), { opacity: 0.55, scale: 1, duration: 0.8 }, '<0.2');
           tl.to(__sel('.b-wave3'), { opacity: 1, duration: 0.5, stagger: 0.06, ease: 'power1.out' }, '+=0.1');
 
           // === PHASE 2 — CASCADE (4-9s) ===
