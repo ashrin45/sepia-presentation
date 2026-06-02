@@ -96,7 +96,11 @@
       transform-origin: center center;
       flex-shrink: 0;
       background: #fff;
-      will-change: transform;
+      /* Pas de will-change: transform ici : il figerait le canvas sur une couche
+         GPU rastérisee a la taille design (1920x1080), que le transform: scale()
+         etire ensuite vers l'ecran -> flou sur HiDPI / moniteurs larges. Sans lui,
+         le navigateur re-rastérise a la resolution reelle de l'ecran (net). Le
+         scale est statique (recalcule au resize), la nav n'en patit pas. */
     }
 
     /* Slides live in light DOM (via <slot>) so authored CSS still applies.
