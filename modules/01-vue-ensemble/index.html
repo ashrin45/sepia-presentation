@@ -696,6 +696,74 @@
   }
   .roadmap .phase .what strong { font-weight: 700; }
 
+  /* ───── Roadmap « deux phases » (slide 14) ───── */
+  .phases-roadmap {
+    flex: 1; min-height: 0;
+    display: grid; grid-template-columns: 3fr 2fr;
+    margin-top: 36px; border: 1px solid var(--c-rule);
+  }
+  .phase-col { display: flex; flex-direction: column; padding: 38px 52px 34px; position: relative; }
+  .phase-col.p1 { background: rgba(184,59,42,0.045); }
+  .phase-col.p2 { background: rgba(46,125,88,0.05); border-left: 1px solid var(--c-rule); }
+  .phase-head { margin-bottom: 28px; }
+  .phase-tag {
+    display: inline-block; font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 15px; letter-spacing: 0.24em; text-transform: uppercase;
+    font-weight: 600; color: #fff; padding: 6px 13px 5px; margin-bottom: 16px;
+  }
+  .p1 .phase-tag { background: var(--c-primary); }
+  .p2 .phase-tag { background: var(--c-accent); }
+  .phase-name {
+    font-family: 'Newsreader', Georgia, serif; font-weight: 400;
+    font-size: 40px; line-height: 1.04; letter-spacing: -0.015em;
+    color: var(--c-ink); margin: 0 0 8px;
+  }
+  .phase-desc { font-size: 20px; color: var(--c-ink-soft); margin: 0; line-height: 1.35; }
+  .phase-steps {
+    flex: 1; display: flex; flex-direction: column; justify-content: space-evenly;
+    padding-left: 30px; position: relative;
+  }
+  .phase-steps::before {
+    content: ""; position: absolute; left: 6px; top: 12px; bottom: 12px;
+    width: 2px; background: var(--c-rule);
+  }
+  .step { position: relative; padding: 4px 0; }
+  .step::before {
+    content: ""; position: absolute; left: -30px; top: 5px;
+    width: 13px; height: 13px; border-radius: 50%;
+    background: var(--c-bg); border: 2.5px solid var(--c-rule);
+  }
+  .p1 .step::before { border-color: var(--c-primary); }
+  .p2 .step::before { border-color: var(--c-accent); }
+  .step.key::before { width: 17px; height: 17px; left: -32px; top: 3px; border: none; }
+  .p1 .step.key::before { background: var(--c-primary); box-shadow: 0 0 0 4px rgba(184,59,42,0.16); }
+  .p2 .step.key::before { background: var(--c-accent); box-shadow: 0 0 0 4px rgba(46,125,88,0.16); }
+  .step-date {
+    display: block; font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--c-ink-soft); margin-bottom: 4px;
+  }
+  .p1 .step.key .step-date { color: var(--c-primary); }
+  .p2 .step.key .step-date { color: var(--c-accent); }
+  .step-what { display: block; font-size: 22px; color: var(--c-ink); line-height: 1.3; }
+  .step.key .step-what { font-weight: 600; font-size: 24px; }
+  .tag-key {
+    display: inline-block; vertical-align: middle; margin-left: 12px;
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600;
+    padding: 2px 8px; border-radius: 2px; transform: translateY(-2px);
+  }
+  .p1 .tag-key { color: var(--c-primary); background: rgba(184,59,42,0.12); }
+  .p2 .tag-key { color: var(--c-accent); background: rgba(46,125,88,0.12); }
+
+  /* ───── Slide 02 : split texte | animation (anim "carrée" → zone dédiée) ───── */
+  .hero-anim .frame {
+    display: grid; grid-template-columns: 460px 1fr;
+    column-gap: 56px; align-items: stretch;
+  }
+  .hero-anim .hero-text { align-self: center; min-width: 0; }
+  .hero-anim .embed-fit-wrapper { min-height: 0; }
+
   /* ───── Closing card (slide 16) ───── */
   .closing-grid {
     display: grid;
@@ -1250,12 +1318,14 @@
 </section>
 <section data-label="02 Qu'est-ce que le sepsis" class="hero-anim">
   <div class="frame">
-    <div class="eyebrow"><span class="num">02</span><span>Pré-requis · définition</span></div>
-    <h1 class="title" style="font-size: 44px; line-height: 1.1; margin: 4px 0 10px; max-width: 1700px;">Le sepsis n'est pas la bactérie — c'est l'<em style="color: var(--c-primary); font-style: normal;">emballement</em>.</h1>
+    <div class="hero-text">
+      <div class="eyebrow"><span class="num">02</span><span>Pré-requis · définition</span></div>
+      <h1 class="title" style="font-size: 40px; line-height: 1.12; margin: 4px 0 16px;">Le sepsis n'est pas la bactérie — c'est l'<em style="color: var(--c-primary); font-style: normal;">emballement</em>.</h1>
 
-    <p style="font-size: 19px; color: var(--c-ink-soft); margin: 0 0 14px; max-width: 1700px; line-height: 1.45;">
-      <strong style="color: var(--c-primary);">Sepsis-3</strong> (Singer et al., <em>JAMA</em> 2016) : dysrégulation potentiellement mortelle de la réponse de l'hôte à une infection, entraînant une dysfonction d'organe. Le sepsis se voit à travers ses conséquences — l'animation ci-dessous reconstitue la cascade <strong>foyer → médiateurs → organes</strong>.
-    </p>
+      <p style="font-size: 18px; color: var(--c-ink-soft); margin: 0; line-height: 1.5;">
+        <strong style="color: var(--c-primary);">Sepsis-3</strong> (Singer et al., <em>JAMA</em> 2016) : dysrégulation potentiellement mortelle de la réponse de l'hôte à une infection, entraînant une dysfonction d'organe. Le sepsis se voit à travers ses conséquences — l'animation reconstitue la cascade <strong>foyer → médiateurs → organes</strong>.
+      </p>
+    </div>
 
     <div class="embed-fit-wrapper" style="border: 1px solid var(--c-rule); background: #FFF1E5; flex: 1;">
       <!-- ====== INLINE: animation-sepsis.html (scope #embed-sepsis) ====== -->
@@ -3665,26 +3735,44 @@
       Timeline prévisionnelle sur ~18 mois — cadrage en cours, preuve de concept à l'été 2026.
     </p>
 
-    <div class="roadmap" style="margin-top: auto;">
-      <div class="phase">
-        <div class="when">juin 2026</div>
-        <div class="what">Squelette de l'étude (en cours)</div>
+    <div class="phases-roadmap">
+      <div class="phase-col p1">
+        <div class="phase-head">
+          <span class="phase-tag">Phase 1</span>
+          <h2 class="phase-name">Preuve de concept</h2>
+          <p class="phase-desc">Prédire le sepsis à partir des paramètres standards de la NFS.</p>
+        </div>
+        <div class="phase-steps">
+          <div class="step">
+            <span class="step-date">juin 2026</span>
+            <span class="step-what">Squelette de l'étude <em style="color: var(--c-ink-soft); font-style: italic;">(en cours)</em></span>
+          </div>
+          <div class="step key">
+            <span class="step-date">été 2026</span>
+            <span class="step-what"><strong>POC sepsis</strong> sur paramètres standards<span class="tag-key">jalon clé</span></span>
+          </div>
+          <div class="step">
+            <span class="step-date">automne 2026</span>
+            <span class="step-what">Validation interne</span>
+          </div>
+        </div>
       </div>
-      <div class="phase milestone">
-        <div class="when">été 2026</div>
-        <div class="what"><strong>POC sepsis</strong> sur paramètres standards</div>
-      </div>
-      <div class="phase">
-        <div class="when">automne 2026</div>
-        <div class="what">Validation interne</div>
-      </div>
-      <div class="phase milestone">
-        <div class="when">hiver 2026 – 2027</div>
-        <div class="what"><strong>Features research-only</strong> (~600 paramètres)</div>
-      </div>
-      <div class="phase">
-        <div class="when">2027</div>
-        <div class="what">Évaluation comparative, communications</div>
+      <div class="phase-col p2">
+        <div class="phase-head">
+          <span class="phase-tag">Phase 2</span>
+          <h2 class="phase-name">Extension research-only</h2>
+          <p class="phase-desc">~600 paramètres avancés, réservés à la recherche.</p>
+        </div>
+        <div class="phase-steps">
+          <div class="step key">
+            <span class="step-date">hiver 2026 – 2027</span>
+            <span class="step-what"><strong>Features research-only</strong><span class="tag-key">jalon clé</span></span>
+          </div>
+          <div class="step">
+            <span class="step-date">2027</span>
+            <span class="step-what">Évaluation comparative, communications</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
