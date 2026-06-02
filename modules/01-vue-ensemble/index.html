@@ -192,16 +192,11 @@
 
   /* ───── Cover ───── */
   .cover {
-    background: linear-gradient(180deg, #FAFAFA 0%, #FAFAFA 65%, #F1F4F7 100%);
+    background: var(--c-bg);
     position: relative;
   }
-  .cover .bar {
-    position: absolute;
-    left: 0; top: 0;
-    width: 18px; height: 100%;
-    background: var(--c-primary);
-  }
-  .cover .frame { padding-left: calc(var(--pad-x) + 18px); }
+  .cover .bar { display: none; }
+  .cover .frame { padding-left: var(--pad-x); }
   .cover .meta-grid {
     margin-top: auto;
     display: grid;
@@ -1326,10 +1321,10 @@
   <div class="bar"></div>
   <div class="frame">
     <div class="cover-mark">SEPIA · Module 01 / 03</div>
-    <h1 class="cover-title" style="font-family: 'Newsreader', serif; font-weight: 400; letter-spacing: -0.04em;">Vue d'ensemble.</h1>
+    <h1 class="cover-title">Vue d'ensemble.</h1>
     <p class="cover-sub" style="font-family: 'Inter', sans-serif; max-width: 1500px;">
-      Étude pilote de prédiction précoce du sepsis.
-      <span class="cover-sub-italic"> — Vue d'ensemble pour qui découvre le projet.</span>
+      Étude pilote de prédiction précoce du sepsis à partir de la NFS.
+      <span class="cover-sub-italic"> — Pour qui découvre le projet.</span>
     </p>
     <ol class="cover-toc">
       <li><span class="num">01</span><span class="what">Contexte clinique</span></li>
