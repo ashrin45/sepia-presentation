@@ -4364,6 +4364,12 @@
         setPhase(0);
       });
 
+      // patch (bug export Claude design): l'etat "joue" du scattergram est serialise
+      // dans le markup -> au repos on vide points/cells et on masque les regions,
+      // pour que l'etat initial corresponde aux compteurs (0). "Lancer" les regenere.
+      cellsGroup.innerHTML = "";
+      pointsGroup.innerHTML = "";
+      __scope.querySelectorAll(".scat-region, .scat-region-label").forEach(el => el.classList.remove("visible"));
       updateStats();
       setPhase(0);
       })();
