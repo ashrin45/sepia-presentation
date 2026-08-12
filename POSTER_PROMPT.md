@@ -106,8 +106,10 @@ La zone hachurée entre T0+1h et T0+12-24h est le cœur du message : c'est le te
 
 | Instrument / source | Rôle | Volumétrie |
 |---|---|---|
-| **Sysmex XN-10** (2 têtes, n° 27854 et 27856) | NFS — génère un fichier `.smp` + N fichiers `.fcs` par tube | ≈ 110 tubes/j par tête, ≈ 40 000/an par tête |
-| **BACT/ALERT VIRTUO** (bioMérieux) | Incubation des hémocultures, détection optique du CO₂ | ≈ 12 hémocultures/j, ≈ 4 400/an |
+| **Sysmex XN-10** (2 têtes, n° 27854 et 27856) — «Sysmex Corporation, ville, pays» | NFS — génère un fichier `.smp` + N fichiers `.fcs` par tube | ≈ 110 tubes/j par tête, ≈ 40 000/an par tête |
+| **BACT/ALERT VIRTUO** — «bioMérieux, ville, pays» | Incubation des hémocultures, détection optique du CO₂ | ≈ 12 hémocultures/j, ≈ 4 400/an |
+
+Conserve les mentions «fabricant, ville, pays» sous cette forme : la convention des congrès de biologie médicale impose de citer chaque instrument avec son fabricant et sa localisation, et ces champs seront complétés à la main.
 | **NAS laboratoire** (Synology) | Miroir des fichiers XN-10, accès SMB en lecture seule | — |
 | **SIL — export Kalisil** | Résultats validés : NFS + hémocultures, CSV mensuel | — |
 
@@ -163,7 +165,33 @@ Extraction du SIL sur **2020-2026 (7 ans)** : **49 675 hémocultures**.
 **Patients distincts** : **21 033** au total (identifiant renseigné), dont **1 775 avec au moins un germe pathogène strict**, soit **8,4 %**.
 Note méthodologique à faire figurer en légende : *3 039 lignes pathogènes pour 1 775 patients — certains patients ont plusieurs prélèvements positifs sur un même épisode.*
 
-**Visualisation à produire** : un diagramme de répartition de la cohorte — barre empilée horizontale **ou** diagramme en entonnoir allant de 49 675 hémocultures → 3 039 lignes pathogènes → 1 775 patients. Utilise une teinte d'accent pour la seule catégorie « pathogène strict » et des gris pour le reste : le lecteur doit voir immédiatement que la classe d'intérêt est **minoritaire (6,1 %)**, ce qui pose la question du **déséquilibre de classes** dans l'apprentissage. Fais figurer explicitement cette remarque.
+**Visualisation à produire — diagramme de flux de la cohorte.** C'est la figure centrale du poster ; traite-la en style STROBE, verticalement, avec les exclusions sortant latéralement à chaque étage :
+
+```
+49 675 hémocultures extraites (2020-2026)
+        │
+        ├──► exclues : 2 512 lignes sans aucun résultat (5,1 %)
+        │
+        ▼
+47 163 hémocultures avec résultat
+        │
+        ├──► 41 233 négatives (83,0 %)  ──► GROUPE B — sans sepsis prouvé
+        ├──► 2 608 contaminants seuls (5,3 %)
+        ├──► 275 zone grise (0,6 %) — arbitrage en cours
+        │
+        ▼
+3 039 lignes à ≥ 1 germe pathogène strict (6,1 %)  ──► GROUPE A — sepsis avéré
+        │
+        ▼
+1 775 patients distincts porteurs d'au moins un pathogène
+   (sur 21 033 patients à identifiant renseigné, soit 8,4 %)
+```
+
+Le total 47 163 est la seule valeur que tu es autorisé à calculer (49 675 − 2 512) ; n'en dérive aucune autre.
+
+Colorimétrie : teinte d'accent réservée à la **seule** branche « pathogène strict », gris pour tout le reste. Le lecteur doit voir instantanément que la classe d'intérêt est **minoritaire (6,1 %)**. Fais figurer explicitement, en légende sous la figure, la conséquence méthodologique : **fort déséquilibre de classes, à traiter dans la stratégie d'apprentissage et d'évaluation**.
+
+**Ne subdivise aucune catégorie au-delà de ce qui est fourni ci-dessus.** N'invente aucun sous-effectif par germe, par service ou par année : au-delà d'un certain niveau de finesse, un effectif faible devient réidentifiant dans un établissement donné.
 
 **État d'avancement du pipeline** — à représenter par une frise à 7 jalons avec statut visible :
 `Helpers ✅ livré` · `Parseur SMP ✅ livré` · `Import SIL ✅ livré` · `Bronze 🔄 en cours` · `Silver ⏳ à venir` · `Gold ⏳ à venir` · `Release ⏳ à venir`
@@ -173,7 +201,7 @@ Note méthodologique à faire figurer en légende : *3 039 lignes pathogènes po
 **Ne remplis pas cette zone.** Crée un **cadre visiblement vide**, bordure en pointillés, occupant une place réelle sur le poster, portant ce libellé :
 
 > **Performances du modèle — analyses en cours.**
-> L'ingestion des données patient pseudonymisées et la production du jeu de données d'apprentissage sont en cours. Les métriques de discrimination et de calibration, ainsi que la stratégie de validation, seront présentées lorsqu'elles seront disponibles.
+> L'ingestion des données patient pseudonymisées et la production du jeu de données d'apprentissage sont en cours. Les métriques de discrimination et de calibration seront rapportées avec leurs **intervalles de confiance à 95 %**, accompagnées de la stratégie de validation retenue et du traitement du déséquilibre de classes.
 
 Aucun graphique, aucune courbe, aucun chiffre dans ce cadre. Le vide est le message : il atteste que rien n'est présenté avant d'être mesuré.
 
@@ -187,6 +215,7 @@ Aucun graphique, aucune courbe, aucun chiffre dans ce cadre. Le vide est le mess
 - **Pseudonymisation au sens RGPD article 4(5)** : l'identifiant patient est remplacé dès l'ingestion par une **empreinte SHA-256 salée** ; la table de correspondance est conservée séparément, chiffrée, sous la responsabilité du seul porteur. Aucune table du pipeline ne contient d'identifiant en clair.
 - **Périmètre strictement hospitalier** : aucun transfert externe, aucun cloud, aucun service tiers. Code source isolé des données.
 - **Gouvernance** : DPO, URC, DRCI, DSI et comité d'éthique local — sollicitations engagées.
+- Prévois une ligne dédiée, à compléter à la main : **« Inscription au registre des traitements n° «à compléter» · avis «instance» n° «à compléter» »**. Laisse-la visible même vide — un jury la cherche.
 
 **Petit schéma à dessiner** : `Identifiant patient` → `SHA-256 + sel` → `patient_id pseudonymisé dans l'entrepôt`, avec un cadenas marquant la frontière du périmètre hospitalier. N'affiche évidemment aucune donnée patient, même fictive et nominative — utilise des libellés neutres du type `IDENTIFIANT` → `a3f2b9e8…`.
 
